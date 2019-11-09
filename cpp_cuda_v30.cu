@@ -22,134 +22,10 @@
 #include <fstream>
 #include <iterator>
 
-
-// Kernels
-
-__global__ void calculaDistancias(unsigned int num_pontos, int *X, int *Y, float *dD)
-{
-	int index = blockIdx.x * blockDim.x + threadIdx.x; // thread corrente
-
-	long int A,B;
-
-	if( index < num_pontos-1 ){
-
-
-		if( X[index]!=X[index+1] || Y[index]!=Y[index+1] ){
-
-			A = (long int) ( (long int)(X[index] - X[index+1]) * (long int)(X[index] - X[index+1]) );
-								
-			B = (long int) ( (long int)(Y[index] - Y[index+1]) * (long int)(Y[index] - Y[index+1]) );
-		
-			dD[index] =  (float) sqrt( (double) (A + B) );
-
-		}
-		else{
-
-			dD[index] = INT_MAX;
-
-		}
-
-	}
-
-}
-
-/*-----------------------------------------------------------------------------------------------------------------*/
-/*-----------------------------------------------------------------------------------------------------------------*/
-
-/*
-__global__ void Calculo_Limites( unsigned int num_regioes, unsigned int num_pontos, float *LimFinal, unsigned int ptsRegiao, float delta_inicial, float *X )
-{
-
-	int index = blockIdx.x * blockDim.x + threadIdx.x; // thread corrente
-
-	//int stride = blockDim.x * gridDim.x; // tamanho do passo da thread
-
-	if(index < (num_regioes-1)) // Calculo do limite de todas regioes antes da ultima
-		LimFinal[index] = X[ptsRegiao * (index+1) -1] + delta_inicial; // Cálculo limite final
-	// Calculo da ultima regiao
-	else if(index == (num_regioes-1)) // Calculo do limite da ultima regiao
-		LimFinal[index] = X[num_pontos-1];
-
-}
-*/
-
-/*-----------------------------------------------------------------------------------------------------------------*/
-/*-----------------------------------------------------------------------------------------------------------------*/
-
-__global__ void Forca_Bruta(int num_pontos, int num_regioes, int ptsRegiao, int *X, int *Y, float *Minimos, float delta_inicial)
-{
-
-	int i = blockIdx.x; // bloco corrente (coincide com a região corrente)
-	int j = blockIdx.x * blockDim.x + threadIdx.x; // thread corrente
-	int k; // auxiliar
-	float aux, delta_minimo = delta_inicial;
-	long int A,B;
-	int LimFinal, x_final;;
-
-	// Passo 5:
-	if( i < num_regioes-1 )// Todos as regioes menos a última são tratadas igualmente.
-	{ 
-		// Calculo do limite final da região
-		x_final = X[ptsRegiao*(i+1)-1];
-		LimFinal = x_final + (int) delta_inicial;
-
-		for( k=j+1 ; X[k]<=LimFinal && k<num_pontos ; k++ ){ // cada thread executará esse laço.
-
-
-			// OTIMIZAÇÃO: Olhar a coordenada x
-			if(X[k]-X[j]>(int)delta_minimo ){
-				k = num_pontos;
-			}
-			else if( X[j]!=X[k] || Y[j]!=Y[k] ){
-
-				A = (long int) ( (long int)(X[j]-X[k])*(long int)(X[j]-X[k]) );
-			
-				B = (long int) ( (long int)(Y[j]-Y[k])*(long int)(Y[j]-Y[k]) );
-	
-				aux = (float) sqrt( (double) (A + B) );
-
-				if( aux < delta_minimo ){
-					delta_minimo = aux;
-					LimFinal = x_final + (int) delta_minimo;
-				}
-			}
-
-
-		}
-		Minimos[j] = delta_minimo;
-	}
-	else
-	{
-		if( j < num_pontos-1 ){
-
-			for( k=j+1 ;  k < num_pontos ; k++ ){ // cada thread executará esse laço.
-
-				// OTIMIZAÇÃO: Olhar a coordenada x
-				if(X[k]-X[j]>(int)delta_minimo ){
-					k = num_pontos;
-				}
-				else if( X[j]!=X[k] || Y[j]!=Y[k] ){
-
-					A = (long int) ( (long int)(X[j]-X[k])*(long int)(X[j]-X[k]) );
-				
-					B = (long int) ( (long int)(Y[j]-Y[k])*(long int)(Y[j]-Y[k]) );
-		
-					aux = (float) sqrt( (double) (A + B) );
-
-					if( aux < delta_minimo )
-						delta_minimo = aux;
-				}
-			}
-			Minimos[j] = delta_minimo;
-		}
-	}
-}
-
 /*-----------------------------------------------------------------------------------------------------------------*/
 /*-----------------------------------------------------------------------------------------------------------------*/
 
 // Funções
-//PRESTE ATENÇÃO NO '&', significa que se esta passando vector por referência
 void leitura(char *argv[], unsigned int *num_pontos, thrust::host_vector<int> &hX, thrust::host_vector<int> &hY)
 
 {
@@ -169,7 +45,6 @@ void leitura(char *argv[], unsigned int *num_pontos, thrust::host_vector<int> &h
  		// Entao as coordenadas são lidas
 		file.read((char*)(hX.data()), hX.size()*sizeof(int));
 		file.read((char*)(hY.data()), hY.size()*sizeof(int));
-
 	}
 
 	pts.close();
@@ -186,9 +61,121 @@ int calculaRegioes(unsigned int num_pontos, unsigned int ptsRegiao)
 	num_regioes = num_pontos / ptsRegiao;	
 	
 	if( num_pontos % ptsRegiao != 0 )
-		num_regioes += 1;
+		num_regioes ++;
 	
 	return num_regioes;
+}
+
+/*-----------------------------------------------------------------------------------------------------------------*/
+/*-----------------------------------------------------------------------------------------------------------------*/
+
+// Kernels
+
+__global__ void calculaDistancias(unsigned int num_pontos, int *X, int *Y, float *dD)
+{
+	int idg = blockIdx.x * blockDim.x + threadIdx.x; // Índice global da thread corrente
+	int xi, xii, yi, yii ;
+
+	long int A,B;
+
+	if( idg < num_pontos-1 ){
+
+		xi  = X[idg];
+		xii = X[idg+1];
+		yi  = Y[idg];
+		yii = Y[idg+1];
+
+		if( xi!=xii || yi!=yii ){
+
+			A = (long int) ( (long int)(xi - xii) * (long int)(xi - xii) );
+								
+			B = (long int) ( (long int)(yi - yii) * (long int)(yi - yii) );
+		
+			dD[idg] =  (float) sqrt( (double) (A + B) );
+		}
+		else{
+
+			dD[idg] = INT_MAX;
+		}
+	}
+}
+
+/*-----------------------------------------------------------------------------------------------------------------*/
+/*-----------------------------------------------------------------------------------------------------------------*/
+
+__global__ void Forca_Bruta(int num_pontos, int num_regioes, int ptsRegiao, int *X, int *Y, float *Minimos, float delta_inicial)
+{
+
+	int idb = blockIdx.x; // Índice do bloco corrente (coincide com a região corrente)
+	int idg = blockIdx.x * blockDim.x + threadIdx.x; // Índice global da thread corrente
+	int k; // auxiliar
+	float aux, delta_minimo = delta_inicial;
+	long int A,B;
+	int LimFinal, x_final;
+	int xi, xk, yi, yk ;
+
+	xi = X[idg];
+	yi = Y[idg];
+
+	if( idb < num_regioes-1 )// Todos as regioes menos a última são tratadas igualmente.
+	{ 
+		// Calculo do limite final da região
+		x_final = X[ptsRegiao*(idb+1)-1];
+		LimFinal = x_final + (int) delta_inicial;
+
+		for( k=idg+1 ; X[k]<=LimFinal && k<num_pontos ; k++ ){ // cada thread executará esse laço.
+
+			xk = X[k];
+			yk = Y[k];
+
+			// OTIMIZAÇÃO: Olhar a coordenada x
+			if(xk-xi>(int)delta_minimo ){
+				k = num_pontos;
+			}
+			else if( xi!=xk || yi!=yk ){
+
+				A = (long int) ( (long int)(xi-xk)*(long int)(xi-xk) );
+			
+				B = (long int) ( (long int)(yi-yk)*(long int)(yi-yk) );
+	
+				aux = (float) sqrt( (double) (A + B) );
+
+				if( aux < delta_minimo ){
+					delta_minimo = aux;
+					LimFinal = x_final + (int) delta_minimo;
+				}
+			}
+		}
+		Minimos[idg] = delta_minimo;
+	}
+	else
+	{
+		if( idg < num_pontos-1 ){
+
+			for( k=idg+1 ; k < num_pontos ; k++ ){ // cada thread executará esse laço.
+
+				xk = X[k];
+				yk = Y[k];
+
+				// OTIMIZAÇÃO: Olhar a coordenada x
+				if(xk-xi>(int)delta_minimo ){
+					k = num_pontos;
+				}
+				else if( xi!=xk || yi!=yk ){
+
+					A = (long int) ( (long int)(xi-xk)*(long int)(xi-xk) );
+				
+					B = (long int) ( (long int)(yi-yk)*(long int)(yi-yk]) );
+		
+					aux = (float) sqrt( (double) (A + B) );
+
+					if( aux < delta_minimo )
+						delta_minimo = aux;
+				}
+			}
+			Minimos[idg] = delta_minimo;
+		}
+	}
 }
 
 /*-----------------------------------------------------------------------------------------------------------------*/
@@ -217,21 +204,18 @@ int main(int argc, char *argv[])
 /*-----------------------------------------------------------------------------------------------------------------*/
 /*-----------------------------------------------------------------------------------------------------------------*/
 
-
 	// Passo 1: Leitura e armazenamento dos pontos. Esse passo é feito lendo um arquivo binário.
 
 	clock_t inicio_leitura = clock();
- 	leitura(argv, &num_pontos, hX, hY);
+	leitura(argv, &num_pontos, hX, hY);
 	clock_t fim_leitura = clock();
 
 	printf("\nTempo da função leitura: %g segundos\n\n", (fim_leitura - inicio_leitura) / (float) CLOCKS_PER_SEC);
 
-
 /*-----------------------------------------------------------------------------------------------------------------*/
 /*-----------------------------------------------------------------------------------------------------------------*/
 
-
-	// Passo 1.5: Memcpy's do host para device
+	// Passo 2: Memcpy's do host para device
 
 	clock_t inicio_transferencia = clock();
 	dX = hX;
@@ -243,31 +227,25 @@ int main(int argc, char *argv[])
 /*-----------------------------------------------------------------------------------------------------------------*/
 /*-----------------------------------------------------------------------------------------------------------------*/
 
-
-
-	// Passo 2: Ordenando os pontos em X:
+	// Passo 3: Ordenando os pontos em X:
 
 	clock_t inicio_ordenacao = clock();
 	thrust::stable_sort_by_key(dX.begin(), dX.end(), dY.begin());
 	clock_t fim_ordenacao = clock();
 
 	printf("Tempo da função de ordenação: %g segundos\n\n", (fim_ordenacao - inicio_ordenacao) / (float) CLOCKS_PER_SEC);
-	
 
 /*-----------------------------------------------------------------------------------------------------------------*/
 /*-----------------------------------------------------------------------------------------------------------------*/
 
-
-	// Passo 3: Dividir os n pontos que temos em m regioes, de forma que cada bloco tenha aproximadamente a mesma quantidade de pontos.
+	// Passo 4: Dividir os n pontos que temos em m regioes, de forma que cada bloco tenha aproximadamente a mesma quantidade de pontos.
 
 	num_regioes = calculaRegioes(num_pontos, ptsRegiao);
 
-	
 /*-----------------------------------------------------------------------------------------------------------------*/
 /*-----------------------------------------------------------------------------------------------------------------*/
 
-
-	//Passo 4: Calculando o delta inicial (distância euclidiana mínima entre um ponto e seu sucessor armazenado):
+	// Passo 5: Calculando o delta inicial (distância euclidiana mínima entre um ponto e seu sucessor armazenado):
 
 	// INICIO MEDIÇÃO DE TEMPO:
 	clock_t inicio_calc_distancias = clock();
@@ -297,13 +275,12 @@ int main(int argc, char *argv[])
 
 	printf("Tempo do kernel Calcula Distâncias: %g segundos\n\n", (fim_calc_distancias - inicio_calc_distancias) / (float) CLOCKS_PER_SEC);
 
+	// Redução usando thrust para achar delta inicial do vetor de distâncias
 	clock_t inicio_reducao1 = clock();
-	thrust::device_vector<float>::iterator iter = thrust::min_element(dD.begin(), dD.end()); // Redução usando thrust para achar delta inicial do vetor de distâncias
-	
+	thrust::device_vector<float>::iterator iter = thrust::min_element(dD.begin(), dD.end()); 
 
 	delta_inicial = *iter;
 	printf("\n\nDelta Inicial: %lf\n\n", delta_inicial);
-
 
 	clock_t fim_reducao1 = clock();
 
@@ -312,7 +289,7 @@ int main(int argc, char *argv[])
 /*-----------------------------------------------------------------------------------------------------------------*/
 /*-----------------------------------------------------------------------------------------------------------------*/
 
-	//Passo 5: Para cada bloco, achar seu delta, utilizando algoritmo de força bruta.
+	// Passo 6: Para cada bloco, achar seu delta, utilizando algoritmo de força bruta.
 
 	// INICIO MEDIÇÃO DE TEMPO
 	clock_t inicio_forca_bruta = clock();
@@ -335,7 +312,6 @@ int main(int argc, char *argv[])
 
 	printf("Tempo do kernel Força Bruta: %g segundos\n\n", (fim_forca_bruta - inicio_forca_bruta) / (float) CLOCKS_PER_SEC);
 	
-
 	// Redução do vetor dMin:
 	clock_t inicio_reducao2 = clock();
 	thrust::device_vector<float>::iterator iter2 = thrust::min_element(dMin.begin(), dMin.end());
@@ -347,12 +323,9 @@ int main(int argc, char *argv[])
 	clock_t fim_reducao2 = clock();
 
 	printf("Tempo da redução2: %g segundos\n\n", (fim_reducao2 - inicio_reducao2) / (float) CLOCKS_PER_SEC);
-	
 
 	clock_t fim = clock();
 	printf("Tempo total: %g segundos\n\n", (fim - inicio) / (float) CLOCKS_PER_SEC);
 
 	return 0;
 }
-
-
