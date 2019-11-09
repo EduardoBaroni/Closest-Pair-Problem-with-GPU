@@ -165,7 +165,7 @@ __global__ void Forca_Bruta(int num_pontos, int num_regioes, int ptsRegiao, int 
 
 					A = (long int) ( (long int)(xi-xk)*(long int)(xi-xk) );
 				
-					B = (long int) ( (long int)(yi-yk)*(long int)(yi-yk]) );
+					B = (long int) ( (long int)(yi-yk)*(long int)(yi-yk) );
 		
 					aux = (float) sqrt( (double) (A + B) );
 
