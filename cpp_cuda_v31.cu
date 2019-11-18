@@ -216,7 +216,7 @@ int main(int argc, char *argv[])
 	leitura(argv, &num_pontos, hX, hY);
 	clock_t fim_leitura = clock();
 
-	printf("\nTempo da função leitura: %g segundos\n\n", (fim_leitura - inicio_leitura) / (float) CLOCKS_PER_SEC);
+	printf("\nTempo da função leitura:\n%g seg\n\n", (fim_leitura - inicio_leitura) / (float) CLOCKS_PER_SEC);
 
 /*-----------------------------------------------------------------------------------------------------------------*/
 /*-----------------------------------------------------------------------------------------------------------------*/
@@ -228,7 +228,7 @@ int main(int argc, char *argv[])
 	dY = hY;
 	clock_t fim_transferencia = clock();
 
-	printf("Tempo da transferencia: %g segundos\n\n", (fim_transferencia - inicio_transferencia) / (float) CLOCKS_PER_SEC);
+	printf("Tempo da transferencia:\n%g seg\n\n", (fim_transferencia - inicio_transferencia) / (float) CLOCKS_PER_SEC);
 
 /*-----------------------------------------------------------------------------------------------------------------*/
 /*-----------------------------------------------------------------------------------------------------------------*/
@@ -239,7 +239,7 @@ int main(int argc, char *argv[])
 	thrust::stable_sort_by_key(dX.begin(), dX.end(), dY.begin());
 	clock_t fim_ordenacao = clock();
 
-	printf("Tempo da função de ordenação: %g segundos\n\n", (fim_ordenacao - inicio_ordenacao) / (float) CLOCKS_PER_SEC);
+	printf("Tempo da função de ordenação:\n%g seg\n\n", (fim_ordenacao - inicio_ordenacao) / (float) CLOCKS_PER_SEC);
 
 /*-----------------------------------------------------------------------------------------------------------------*/
 /*-----------------------------------------------------------------------------------------------------------------*/
@@ -279,7 +279,7 @@ int main(int argc, char *argv[])
 	// FIM MEDIÇÃO DE TEMPO
 	clock_t fim_calc_distancias = clock();
 
-	printf("Tempo do kernel Calcula Distâncias: %g segundos\n\n", (fim_calc_distancias - inicio_calc_distancias) / (float) CLOCKS_PER_SEC);
+	printf("Tempo do kernel Calcula Distâncias:\n%g seg\n\n", (fim_calc_distancias - inicio_calc_distancias) / (float) CLOCKS_PER_SEC);
 
 	// Redução usando thrust para achar delta inicial do vetor de distâncias
 	clock_t inicio_reducao1 = clock();
@@ -290,7 +290,7 @@ int main(int argc, char *argv[])
 
 	clock_t fim_reducao1 = clock();
 
-	printf("Tempo da redução1: %g segundos\n\n", (fim_reducao1 - inicio_reducao1) / (float) CLOCKS_PER_SEC);
+	printf("Tempo da redução1:\n%g seg\n\n", (fim_reducao1 - inicio_reducao1) / (float) CLOCKS_PER_SEC);
 
 /*-----------------------------------------------------------------------------------------------------------------*/
 /*-----------------------------------------------------------------------------------------------------------------*/
@@ -316,7 +316,7 @@ int main(int argc, char *argv[])
 	// FIM MEDICAO DE TEMPO
 	clock_t fim_forca_bruta = clock();
 
-	printf("Tempo do kernel Força Bruta: %g segundos\n\n", (fim_forca_bruta - inicio_forca_bruta) / (float) CLOCKS_PER_SEC);
+	printf("Tempo do kernel Força Bruta:\n%g seg\n\n", (fim_forca_bruta - inicio_forca_bruta) / (float) CLOCKS_PER_SEC);
 	
 	// Redução do vetor dMin:
 	clock_t inicio_reducao2 = clock();
@@ -328,10 +328,10 @@ int main(int argc, char *argv[])
 	printf("Delta mínimo:\n%lf\n", delta_minimo);
 	clock_t fim_reducao2 = clock();
 
-	printf("Tempo da redução2: %g segundos\n\n", (fim_reducao2 - inicio_reducao2) / (float) CLOCKS_PER_SEC);
+	printf("Tempo da redução2:\n%g seg\n\n", (fim_reducao2 - inicio_reducao2) / (float) CLOCKS_PER_SEC);
 
 	clock_t fim = clock();
-	printf("Tempo total: %g segundos\n\n", (fim - inicio) / (float) CLOCKS_PER_SEC);
+	printf("Tempo total:\n%g seg\n\n", (fim - inicio) / (float) CLOCKS_PER_SEC);
 
 	return 0;
 }
