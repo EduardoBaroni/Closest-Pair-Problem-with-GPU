@@ -84,7 +84,7 @@ __global__ void calculaDistancias(unsigned int num_pontos, int *X, int *Y, float
 		// Cópia
 		Xs[idl] = X[idg];
 		Ys[idl] = Y[idg];
-		if( idl%1023 == 0 ) // última thread de cada bloco
+		if( idl == blockDim.x-1 ) // última thread de cada bloco
 		{
 			Xs[idl+1] = X[idg+1];
 			Ys[idl+1] = X[idg+1];		
