@@ -8,6 +8,7 @@
 #include <limits.h>
 #include <time.h>
 
+void geraDados(float y, int x);
 void Leitura(int *num_pontos, int **X, int **Y, char *argv[]);
 float Calculo_Delta_Inicial( int num_pontos, int X[], int Y[] );
 float Forca_Bruta(int num_pontos, int num_regioes, int ptsRegiao, float delta_inicial, int X[], int Y[]);
@@ -129,9 +130,24 @@ int main(int argc, char *argv[])
 
 	printf("Tempo total: %g segundos\n\n", (fim - inicio) / (float) CLOCKS_PER_SEC);
 
+	geraDados(fim-inicio, num_pontos);
+	
 	return 0;
 }
 
+void geraDados(float y, int x)
+{
+	FILE *y_data = fopen("eixoVertical", "a");	
+	fprintf(y_data, "%g", y / (float) CLOCKS_PER_SEC);
+	fprintf(y_data, "%s", "\n");
+	
+	FILE *x_data = fopen("eixoHorizontal", "a");	
+	fprintf(x_data, "%d", x);
+	fprintf(x_data, "%s", "\n");
+
+	fclose(y_data);
+	fclose(x_data);
+}
 
 void Leitura(int *num_pontos, int **X, int **Y, char *argv[])
 {
