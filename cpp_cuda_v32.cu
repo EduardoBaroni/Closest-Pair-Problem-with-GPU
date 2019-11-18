@@ -126,6 +126,7 @@ __global__ void Forca_Bruta(int num_pontos, int num_regioes, int ptsRegiao, int 
 	long int A,B;
 	int LimFinal, x_final;
 	int xi, xk, yi, yk;
+	bool continua;
 	__shared__ int Xs[32], Ys[32];
 
 	// Cópia
@@ -139,10 +140,7 @@ __global__ void Forca_Bruta(int num_pontos, int num_regioes, int ptsRegiao, int 
 
 	if( idb < num_regioes-1 )// Todos as regioes menos a última são tratadas igualmente.
 	{ 
-		// Calculo do limite final da região
-		x_final = X[ptsRegiao*(idb+1)-1];
-		LimFinal = x_final + (int) delta_inicial;
-
+		continua = true ;
 		// for com uso de índices locais para threads
 		for( k=idl+1 ; k<ptsRegiao ; k++ ){ // cada thread executará esse laço.
 
@@ -152,6 +150,7 @@ __global__ void Forca_Bruta(int num_pontos, int num_regioes, int ptsRegiao, int 
 			// OTIMIZAÇÃO: Olhar a coordenada x
 			if(xk-xi>(int)delta_minimo ){
 				k = num_pontos;
+				continua = false;
 			}
 			else if( xi!=xk || yi!=yk ){
 
@@ -163,12 +162,16 @@ __global__ void Forca_Bruta(int num_pontos, int num_regioes, int ptsRegiao, int 
 
 				if( aux < delta_minimo ){
 					delta_minimo = aux;
-					LimFinal = x_final + (int) delta_minimo;
 				}
 			}
 		}
+
+		// Calculo do limite final da região
+		x_final = X[ptsRegiao*(idb+1)-1];
+		LimFinal = x_final + (int) delta_minimo;
+
 		// for com uso de índices globais para threads
-		for( k=ptsRegiao*(idb+1) ; X[k]<=LimFinal && k<num_pontos ; k++ ){ // cada thread executará esse laço.
+		for( k=ptsRegiao*(idb+1) ; continua && X[k]<=LimFinal && k<num_pontos ; k++ ){ // cada thread executará esse laço.
 
 			xk = X[k];
 			yk = Y[k];
@@ -187,7 +190,7 @@ __global__ void Forca_Bruta(int num_pontos, int num_regioes, int ptsRegiao, int 
 
 				if( aux < delta_minimo ){
 					delta_minimo = aux;
-					//LimFinal = x_final + (int) delta_minimo;
+					LimFinal = x_final + (int) delta_minimo;
 				}
 			}
 		}
