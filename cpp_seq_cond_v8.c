@@ -157,6 +157,10 @@ float Forca_Bruta(int num_pontos, int num_regioes, int ptsRegiao, float delta_in
 	long int A,B;
 	int lim_final;
 	
+	#if CONTADOR
+		int cont = 0;
+	#endif
+
 	for( i=0 ; i<num_regioes-1 ; i++ ){
 
 		// Cálculo limite final da região i
@@ -166,16 +170,17 @@ float Forca_Bruta(int num_pontos, int num_regioes, int ptsRegiao, float delta_in
 
 			for( int k=j+1 ; X[k]<=lim_final && k<num_pontos ; k++ ){
 
-				if( X[j]!=X[k] || Y[j]!=Y[k] ){
-
-
-					
-
+				if( X[j]!=X[k] || Y[j]!=Y[k] )
+				{
 					// OTIMIZAÇÃO: Olhar a coordenada x
 					if( X[k]-X[j]>0 && X[k]-X[j]>(int)delta_minimo ){
 						break;
 					}
-					else{
+					else
+					{
+						#if CONTADOR
+							cont++;
+						#endif
 
 						A = (long int) ( (long int)(X[j]-X[k])*(long int)(X[j]-X[k]) );
 					
@@ -183,14 +188,9 @@ float Forca_Bruta(int num_pontos, int num_regioes, int ptsRegiao, float delta_in
 			
 						aux = (float) sqrt( A + B );
 
-					
-					
-
 						if( aux < delta_minimo )
 							delta_minimo = aux;
 					}
-
-
 
 				}
 			}
@@ -207,16 +207,17 @@ float Forca_Bruta(int num_pontos, int num_regioes, int ptsRegiao, float delta_in
 					if( X[k]-X[j]>0 && X[k]-X[j]>(int)delta_minimo ){
 						break;
 					}
-					else{
+					else
+					{
+						#if CONTADOR
+							cont++;
+						#endif
 
 						A = (long int) ( (long int)(X[j]-X[k])*(long int)(X[j]-X[k]) );
 					
 						B = (long int) ( (long int)(Y[j]-Y[k])*(long int)(Y[j]-Y[k]) );
 			
 						aux = (float) sqrt( A + B );
-
-					
-					
 
 						if( aux < delta_minimo )
 							delta_minimo = aux;

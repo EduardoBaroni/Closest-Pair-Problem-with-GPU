@@ -156,7 +156,10 @@ float Forca_Bruta(int num_pontos, int num_regioes, int ptsRegiao, float delta_in
 	int i;
 	long int A,B;
 	int lim_final;
-	int cont = 0;
+	
+	#if CONTADOR
+		int cont = 0;
+	#endif
 
 	for( i=0 ; i<num_regioes-1 ; i++ ){
 
