@@ -16,12 +16,9 @@ void troca( int *a, int *b);
 void quicksort(int p, int r, int X[], int Y[], int V[]);
 int separa(int p, int r, int X[], int Y[], int V[]);
 
-inline void cpp_medicoes(char* argv[]);
-
 int main(int argc, char *argv[])
 {
 	// Declarações de Variáveis:
-	clock_t inicio = clock();
 	int num_pontos, num_regioes, ptsRegiao = 1024/32;
 	int *X, *Y;
 	float delta_inicial, delta_minimo;
@@ -29,76 +26,120 @@ int main(int argc, char *argv[])
 /*-----------------------------------------------------------------------------------------------------------------*/
 /*-----------------------------------------------------------------------------------------------------------------*/
 
-	#if MEDICAO_INTERMEDIARIA
-		cpp_medicoes(argv);
-	#else
+	/* 
+		Passo 1: Leitura e armazenamento dos pontos. Esse passo é feito lendo um arquivo texto, mas pode-se adaptar para se ler
+		arquivos em binário (para casos de testes muito grandes).
 
-		/* 
-			Passo 1: Leitura e armazenamento dos pontos. Esse passo é feito lendo um arquivo texto, mas pode-se adaptar para se ler
-			arquivos em binário (para casos de testes muito grandes).
+	 	Modelo de como o usuário informará os pontos: n m x1 y1 x2 y2 x3 y3... , em que n é a quantidade de pontos,
+	  	m é a quantidade de blocos, e xi yi são as coordenadas dos pontos.
 
-		 	Modelo de como o usuário informará os pontos: n m x1 y1 x2 y2 x3 y3... , em que n é a quantidade de pontos,
-		  	m é a quantidade de blocos, e xi yi são as coordenadas dos pontos.
+	   Teremos dois vetores, X e Y, para armazenar os pontos. Os vetores, juntos, armazenarão os pontos,
+		de forma que um ponto no plano xy tem sua parte x armazenada no vetor X, e sua parte Y armazenada no
+		vetor Y, sendo que os índices para parte x e a parte y deste ponto deve ser o mesmo. Assim, para um 
+		ponto (a,b), se temos (a) armazenado em X[2], então (b) deve estar armazenado em Y[2].
+	*/
 
-		   Teremos dois vetores, X e Y, para armazenar os pontos. Os vetores, juntos, armazenarão os pontos,
-			de forma que um ponto no plano xy tem sua parte x armazenada no vetor X, e sua parte Y armazenada no
-			vetor Y, sendo que os índices para parte x e a parte y deste ponto deve ser o mesmo. Assim, para um 
-			ponto (a,b), se temos (a) armazenado em X[2], então (b) deve estar armazenado em Y[2].
-		*/
-	
-		Leitura(&num_pontos,&X,&Y,argv);
-
-		// Passo 2: Ordenando os pontos em X:
-
-		// Vetor auxiliar de posições: (Para tornar o quicksort estável)
-		int *X_position = (int *) malloc( num_pontos*sizeof(int) );
-		for( int i=0 ; i<num_pontos ; i++ )
-			X_position[i] = i;
-
-		// Chamada do quicksort (esta ordenação é instável)
-		quicksort(0, num_pontos-1, X, Y, X_position);
-
-		// Fazer uma varredura para garantir a estabilidade.
-		for( int i=0, j ; i<num_pontos-1 ; i++ ){
-			if( X[i] == X[i+1] ){
-				for( j=i+2 ; X[j]==X[i] ; j++ );
-				quicksort( i, j-1 , X_position, Y, X);
-				i=j-1;
-			}
-		}
-		free(X_position);
-
-
-		// Passo 3: Calculando o delta inicial (distância euclidiana mínima entre um ponto e seu sucessor armazenado):
-		
-		delta_inicial = Calculo_Delta_Inicial(num_pontos, X, Y);
-
-		//Passo 4: Dividir os pontos que temos em várias regiões, de forma que cada região tenha aproximadamente a mesma quantidade de pontos.
-		
-		// Caso não tenhamos quantidade iguais de pontos em todos os blocos, realizamos o tratamento:
-		num_regioes = num_pontos / ptsRegiao;	
-		if( num_pontos % ptsRegiao != 0 )
-			num_regioes += 1;
-
-		/* 
-			Passo 5: Para cada bloco, achar seu delta, utilizando algoritmo de força bruta.
-
-			O algoritmo de força bruta consiste em, testar todos os pares de pontos possíveis,
-			a fim de se obter o menor delta possível. 
-
-			OBS: Note que o algoritmo é feito já levando em conta as intersecções entre os blocos.
-		*/
-
-		delta_minimo = Forca_Bruta(num_pontos, num_regioes, ptsRegiao, delta_inicial, X, Y);
-
+	#if DEBUG
+ 		clock_t inicio_leitura = clock();
 	#endif
 
+	Leitura(&num_pontos,&X,&Y,argv);
+	
+	#if DEBUG
+		clock_t fim_leitura = clock();
+		printf("\nTempo da função leitura: %g segundos\n\n", (fim_leitura - inicio_leitura) / (float) CLOCKS_PER_SEC);
+	#endif
+/*-----------------------------------------------------------------------------------------------------------------*/
+/*-----------------------------------------------------------------------------------------------------------------*/
+	clock_t inicio = clock();
+	// Passo 2: Ordenando os pontos em X:
+
+	#if DEBUG
+		clock_t inicio_ordenacao = clock();
+	#endif
+
+	// Vetor auxiliar de posições: (Para tornar o quicksort estável)
+	int *X_position = (int *) malloc( num_pontos*sizeof(int) );
+	for( int i=0 ; i<num_pontos ; i++ )
+		X_position[i] = i;
+
+
+	// Chamada do quicksort (esta ordenação é instável)
+	quicksort(0, num_pontos-1, X, Y, X_position);
+
+
+	// Fazer uma varredura para garantir a estabilidade.
+	for( int i=0, j ; i<num_pontos-1 ; i++ ){
+		if( X[i] == X[i+1] ){
+			for( j=i+2 ; X[j]==X[i] ; j++ );
+			quicksort( i, j-1 , X_position, Y, X);
+			i=j-1;
+		}
+	}
+	free(X_position);
+
+	#if DEBUG
+		clock_t fim_ordenacao = clock();
+		printf("Tempo da função de ordenação: %g segundos\n\n", (fim_ordenacao - inicio_ordenacao) / (float) CLOCKS_PER_SEC);
+	#endif
+/*-----------------------------------------------------------------------------------------------------------------*/
+/*-----------------------------------------------------------------------------------------------------------------*/
+
+	// Passo 3: Calculando o delta inicial (distância euclidiana mínima entre um ponto e seu sucessor armazenado):
+
+	#if DEBUG
+		clock_t inicio_calc_distancias = clock();
+	#endif
+	
+	delta_inicial = Calculo_Delta_Inicial(num_pontos, X, Y);
+	
+	#if DEBUG
+		clock_t fim_calc_distancias = clock();
+		printf("Tempo da função Calcula Distâncias: %g segundos\n\n", (fim_calc_distancias - inicio_calc_distancias) / (float) CLOCKS_PER_SEC);
+	#endif
+		
+	printf("\n\nDelta Inicial: %lf\n\n", delta_inicial);
+/*-----------------------------------------------------------------------------------------------------------------*/
+/*-----------------------------------------------------------------------------------------------------------------*/
+
+	//Passo 4: Dividir os pontos que temos em várias regiões, de forma que cada região tenha aproximadamente a mesma quantidade de pontos.
+	
+	// Caso não tenhamos quantidade iguais de pontos em todos os blocos, realizamos o tratamento:
+	num_regioes = num_pontos / ptsRegiao;	
+	if( num_pontos % ptsRegiao != 0 )
+		num_regioes += 1;
+
+/*-----------------------------------------------------------------------------------------------------------------*/
+/*-----------------------------------------------------------------------------------------------------------------*/
+
+	/* 
+		Passo 5: Para cada bloco, achar seu delta, utilizando algoritmo de força bruta.
+
+		O algoritmo de força bruta consiste em, testar todos os pares de pontos possíveis,
+		a fim de se obter o menor delta possível. 
+
+		OBS: Note que o algoritmo é feito já levando em conta as intersecções entre os blocos.
+	*/
+	
+	#if DEBUG	
+		clock_t inicio_forca_bruta = clock();
+	#endif
+
+	delta_minimo = Forca_Bruta(num_pontos, num_regioes, ptsRegiao, delta_inicial, X, Y);
+
+	// Imprimindo resultados:
+	
+	#if DEBUG
+		clock_t fim_forca_bruta = clock();
+		printf("Tempo da função Força Bruta: %g segundos\n\n", (fim_forca_bruta - inicio_forca_bruta) / (float) CLOCKS_PER_SEC);
+	#endif
+	printf("\nDelta mínimo:\n%lf\n", delta_minimo);
+	
 	clock_t fim = clock();
+/*-----------------------------------------------------------------------------------------------------------------*/
+/*-----------------------------------------------------------------------------------------------------------------*/
 
-	/*-----------------------------------------------------------------------------------------------------------------*/
-	/*-----------------------------------------------------------------------------------------------------------------*/
-
-	printf("\nTempo total: %g segundos\n\n", (fim - inicio) / (float) CLOCKS_PER_SEC);
+	printf("Tempo total: %g segundos\n\n", (fim - inicio) / (float) CLOCKS_PER_SEC);
 
 	return 0;
 }
@@ -118,8 +159,9 @@ void Leitura(int *num_pontos, int **X, int **Y, char *argv[])
 		*Y = (int *) malloc( *num_pontos * sizeof(int) );
 	}
 
-	if (fread( *X, sizeof(int), *num_pontos, entrada2));  // TODO: throw exception
-	if (fread( *Y, sizeof(int), *num_pontos, entrada2));
+	// TODO: throw exception
+	if (fread( *X, sizeof(int), *num_pontos, entrada2));
+	if (fread( *Y, sizeof(int), *num_pontos, entrada2));	
 
 	fclose(entrada1);
 	fclose(entrada2);
@@ -172,15 +214,15 @@ float Forca_Bruta(int num_pontos, int num_regioes, int ptsRegiao, float delta_in
 
 				if( X[j]!=X[k] || Y[j]!=Y[k] )
 				{
+					#if CONTADOR
+						cont++;
+					#endif
+
 					// OTIMIZAÇÃO: Olhar a coordenada x
 					if( X[k]-X[j]>0 && X[k]-X[j]>(int)delta_minimo ){
 						break;
 					}
-					else
-					{
-						#if CONTADOR
-							cont++;
-						#endif
+					else{
 
 						A = (long int) ( (long int)(X[j]-X[k])*(long int)(X[j]-X[k]) );
 					
@@ -191,6 +233,8 @@ float Forca_Bruta(int num_pontos, int num_regioes, int ptsRegiao, float delta_in
 						if( aux < delta_minimo )
 							delta_minimo = aux;
 					}
+
+
 
 				}
 			}
@@ -214,7 +258,6 @@ float Forca_Bruta(int num_pontos, int num_regioes, int ptsRegiao, float delta_in
 						#endif
 
 						A = (long int) ( (long int)(X[j]-X[k])*(long int)(X[j]-X[k]) );
-					
 						B = (long int) ( (long int)(Y[j]-Y[k])*(long int)(Y[j]-Y[k]) );
 			
 						aux = (float) sqrt( A + B );
@@ -222,10 +265,13 @@ float Forca_Bruta(int num_pontos, int num_regioes, int ptsRegiao, float delta_in
 						if( aux < delta_minimo )
 							delta_minimo = aux;
 					}
-
 			}
 		}
 	}
+
+	#if CONTADOR
+		printf("Distâncias calculadas = %d\n", cont);
+	#endif
 
 	return delta_minimo;
 }
@@ -278,55 +324,3 @@ void quicksort(int p, int r, int X[], int Y[], int V[])
 	}
 }
 
-void cpp_medicoes(char* argv[])
-{
-	int num_pontos, num_regioes, ptsRegiao = 1024/32;
-	int *X, *Y;
-	float delta_inicial, delta_minimo;
-
-	clock_t inicio_leitura = clock();
-	Leitura(&num_pontos,&X,&Y,argv);
-	clock_t fim_leitura = clock();
-	
-	printf("\nTempo da função leitura: %g segundos\n\n", (fim_leitura - inicio_leitura) / (float) CLOCKS_PER_SEC);
-
-	clock_t inicio_ordenacao = clock();
-
-	int *X_position = (int *) malloc( num_pontos*sizeof(int) );
-	for( int i=0 ; i<num_pontos ; i++ )
-		X_position[i] = i;
-
-	quicksort(0, num_pontos-1, X, Y, X_position);
-
-	for( int i=0, j ; i<num_pontos-1 ; i++ ){
-		if( X[i] == X[i+1] ){
-			for( j=i+2 ; X[j]==X[i] ; j++ );
-			quicksort( i, j-1 , X_position, Y, X);
-			i=j-1;
-		}
-	}
-	free(X_position);
-
-	clock_t fim_ordenacao = clock();
-
-	printf("Tempo da função de ordenação: %g segundos\n\n", (fim_ordenacao - inicio_ordenacao) / (float) CLOCKS_PER_SEC);
-
-	clock_t inicio_calc_distancias = clock();
-	delta_inicial = Calculo_Delta_Inicial(num_pontos, X, Y);
-	clock_t fim_calc_distancias = clock();
-
-	printf("\nDelta Inicial: %lf\n\n\n", delta_inicial);
-	printf("Tempo da função Calcula Distâncias: %g segundos\n\n", (fim_calc_distancias - inicio_calc_distancias) / (float) CLOCKS_PER_SEC);
-
-	num_regioes = num_pontos / ptsRegiao;	
-	if( num_pontos % ptsRegiao != 0 )
-		num_regioes += 1;
-
-	clock_t inicio_forca_bruta = clock();
-	delta_minimo = Forca_Bruta(num_pontos, num_regioes, ptsRegiao, delta_inicial, X, Y);
-	clock_t fim_forca_bruta = clock();
-
-	printf("\nDelta mínimo:\n%lf\n", delta_minimo);
-	printf("Tempo da função Força Bruta: %g segundos\n\n", (fim_forca_bruta - inicio_forca_bruta) / (float) CLOCKS_PER_SEC);
-	
-}
