@@ -231,13 +231,14 @@ __global__ void Forca_Bruta(int num_pontos, int num_regioes, int ptsRegiao, int 
 
 int main(int argc, char *argv[])
 {
+	clock_t inicio = clock();
 	// Declaração de variáveis:
 	unsigned int num_regioes, num_pontos, ptsRegiao;
 	int maxThreadBloco;
 	float delta_inicial, delta_minimo;
 
 	// Capturando o máximo número de threads por bloco da máquina
-	cudaDeviceGetAttribute(&maxThreadBloco, cudaDevAttrMaxThreadsPerBlock, 0);
+	cudaDeviceGetAttribute(&maxThreadBloco, cudaDevAttrMaxThreadsPerBlock,0);
 	ptsRegiao = maxThreadBloco/32;
 
 	// HOST
@@ -253,49 +254,34 @@ int main(int argc, char *argv[])
 
 	// Passo 1: Leitura e armazenamento dos pontos. Esse passo é feito lendo um arquivo binário.
 
-	#if DEBUG
-		clock_t inicio_leitura = clock();
- 	#endif
+	clock_t inicio_leitura = clock();
+	leitura(argv, &num_pontos, hX, hY);
+	clock_t fim_leitura = clock();
 
- 	leitura(argv, &num_pontos, hX, hY);
-	
- 	#if DEBUG
-		clock_t fim_leitura = clock();
-		printf("\nTempo da função leitura: %g segundos\n\n", (fim_leitura - inicio_leitura) / (float) CLOCKS_PER_SEC);
-	#endif
+	printf("\nTempo da função leitura: %g segundos\n\n", (fim_leitura - inicio_leitura) / (float) CLOCKS_PER_SEC);
 
 /*-----------------------------------------------------------------------------------------------------------------*/
 /*-----------------------------------------------------------------------------------------------------------------*/
-	clock_t inicio = clock();
+
 	// Passo 2: Memcpy's do host para device
 
-	#if DEBUG
-		clock_t inicio_transferencia = clock();
-	#endif
-
+	clock_t inicio_transferencia = clock();
 	dX = hX;
 	dY = hY;
-	
-	#if DEBUG
-		clock_t fim_transferencia = clock();
-		printf("Tempo da transferencia: %g segundos\n\n", (fim_transferencia - inicio_transferencia) / (float) CLOCKS_PER_SEC);
-	#endif
+	clock_t fim_transferencia = clock();
+
+	printf("Tempo da transferencia: %g segundos\n\n", (fim_transferencia - inicio_transferencia) / (float) CLOCKS_PER_SEC);
 
 /*-----------------------------------------------------------------------------------------------------------------*/
 /*-----------------------------------------------------------------------------------------------------------------*/
 
 	// Passo 3: Ordenando os pontos em X:
 
-	#if DEBUG
-		clock_t inicio_ordenacao = clock();
-	#endif
+	clock_t inicio_ordenacao = clock();
+	thrust::stable_sort_by_key(dX.begin(), dX.end(), dY.begin());
+	clock_t fim_ordenacao = clock();
 
-	thrust::sort_by_key(dX.begin(), dX.end(), dY.begin());
-	
-	#if DEBUG
-		clock_t fim_ordenacao = clock();
-		printf("Tempo da função de ordenação: %g segundos\n\n", (fim_ordenacao - inicio_ordenacao) / (float) CLOCKS_PER_SEC);
-	#endif
+	printf("Tempo da função de ordenação: %g segundos\n\n", (fim_ordenacao - inicio_ordenacao) / (float) CLOCKS_PER_SEC);
 
 /*-----------------------------------------------------------------------------------------------------------------*/
 /*-----------------------------------------------------------------------------------------------------------------*/
@@ -307,78 +293,84 @@ int main(int argc, char *argv[])
 /*-----------------------------------------------------------------------------------------------------------------*/
 /*-----------------------------------------------------------------------------------------------------------------*/
 
-	//Passo 5: Calculando o delta inicial (distância euclidiana mínima entre um ponto e seu sucessor armazenado):
- 	
-	thrust::device_vector<float> dD(num_pontos-1); // Vetor de Distâncias (para o delta inicial) no device	
+	// Passo 5: Calculando o delta inicial (distância euclidiana mínima entre um ponto e seu sucessor armazenado):
 
+	// INICIO MEDIÇÃO DE TEMPO:
+	clock_t inicio_calc_distancias = clock();
+
+	thrust::device_vector<float> dD(num_pontos-1); // Vetor de Distâncias (para o delta inicial) no device	
+	
 	// Forma encontrada de usar vetores da thrust em um kernel: Apontar para cada um deles com novos ponteiros.
 	int *X = thrust::raw_pointer_cast(&dX[0]); // aponta para dX
 	int *Y = thrust::raw_pointer_cast(&dY[0]); // aponta para dY
 	float *d = thrust::raw_pointer_cast(&dD[0]); // aponta para dD
 
 	//Número Máximo de Blocos: 2^31-1 = 2 147 483 647
-	int num_blocos = num_pontos % maxThreadBloco != 0 ? (num_pontos / maxThreadBloco) + 1 : num_pontos / maxThreadBloco;
+	int num_blocos;
+	
+	if( num_pontos % maxThreadBloco != 0 )
+		num_blocos = (num_pontos / maxThreadBloco) + 1;
+	else
+		num_blocos = num_pontos / maxThreadBloco;		
 
-	#if DEBUG
-		clock_t inicio_calc_distancias = clock();
-	#endif
  	// Kernel que calcula vector de distâncias
 	calculaDistancias<<<num_blocos, maxThreadBloco>>>(num_pontos, X, Y, d);
 	
  	cudaDeviceSynchronize(); // Necessário
 
- 	#if DEBUG
-		clock_t fim_calc_distancias = clock();
-		printf("Tempo do kernel Calcula Distâncias: %g segundos\n\n", (fim_calc_distancias - inicio_calc_distancias) / (float) CLOCKS_PER_SEC);
-	
-		clock_t inicio_reducao1 = clock();
-	#endif
+	// FIM MEDIÇÃO DE TEMPO
+	clock_t fim_calc_distancias = clock();
+
+	printf("Tempo do kernel Calcula Distâncias: %g segundos\n\n", (fim_calc_distancias - inicio_calc_distancias) / (float) CLOCKS_PER_SEC);
 
 	// Redução usando thrust para achar delta inicial do vetor de distâncias
+	clock_t inicio_reducao1 = clock();
 	thrust::device_vector<float>::iterator iter = thrust::min_element(dD.begin(), dD.end()); 
-	
-	#if DEBUG
-		clock_t fim_reducao1 = clock();
-		printf("Tempo da redução1: %g segundos\n\n", (fim_reducao1 - inicio_reducao1) / (float) CLOCKS_PER_SEC);
-	#endif
 
 	delta_inicial = *iter;
-	printf("\n\nDelta Inicial: %lf\n\n", delta_inicial);	
+	printf("\n\nDelta Inicial: %lf\n\n", delta_inicial);
+
+	clock_t fim_reducao1 = clock();
+
+	printf("Tempo da redução1: %g segundos\n\n", (fim_reducao1 - inicio_reducao1) / (float) CLOCKS_PER_SEC);
 
 /*-----------------------------------------------------------------------------------------------------------------*/
 /*-----------------------------------------------------------------------------------------------------------------*/
 
-	//Passo 6: Para cada bloco, achar seu delta, utilizando algoritmo de força bruta.
+	// Passo 6: Para cada bloco, achar seu delta, utilizando algoritmo de força bruta.
 
-	num_blocos = num_regioes%maxThreadBloco != 0 ? (num_regioes/maxThreadBloco) + 1 : num_regioes/maxThreadBloco;
+	// INICIO MEDIÇÃO DE TEMPO
+	clock_t inicio_forca_bruta = clock();
+
+	if( num_regioes%maxThreadBloco != 0 )
+		num_blocos = (num_regioes/maxThreadBloco) + 1;
+	else
+		num_blocos = num_regioes/maxThreadBloco;	
 
 	thrust::device_vector<float> dMin(num_pontos, INT_MAX); // Vetor de minimos
+	
 	float *Min = thrust::raw_pointer_cast(&dMin[0]); // aponta para dMin 
-
-	#if DEBUG
-		clock_t inicio_forca_bruta = clock();
-	#endif
 
 	Forca_Bruta<<<num_regioes, ptsRegiao>>>(num_pontos, num_regioes, ptsRegiao, X, Y, Min, delta_inicial);
 	
 	cudaDeviceSynchronize();
 
-	#if DEBUG
-		clock_t fim_forca_bruta = clock();
-		printf("Tempo do kernel Força Bruta: %g segundos\n\n", (fim_forca_bruta - inicio_forca_bruta) / (float) CLOCKS_PER_SEC);
+	// FIM MEDICAO DE TEMPO
+	clock_t fim_forca_bruta = clock();
 
-		clock_t inicio_reducao2 = clock();
-	#endif
-	// Redução do vetor dMin
+	printf("Tempo do kernel Força Bruta: %g segundos\n\n", (fim_forca_bruta - inicio_forca_bruta) / (float) CLOCKS_PER_SEC);
+	
+	// Redução do vetor dMin:
+	clock_t inicio_reducao2 = clock();
 	thrust::device_vector<float>::iterator iter2 = thrust::min_element(dMin.begin(), dMin.end());
 	
-	#if DEBUG
-		clock_t fim_reducao2 = clock();
-		printf("Tempo da redução2: %g segundos\n\n", (fim_reducao2 - inicio_reducao2) / (float) CLOCKS_PER_SEC);
-	#endif
-
 	delta_minimo = *iter2;
+
+	// Imprimindo resultados:
 	printf("Delta mínimo:\n%lf\n", delta_minimo);
+	clock_t fim_reducao2 = clock();
+
+	printf("Tempo da redução2: %g segundos\n\n", (fim_reducao2 - inicio_reducao2) / (float) CLOCKS_PER_SEC);
 
 	clock_t fim = clock();
 	printf("Tempo total: %g segundos\n\n", (fim - inicio) / (float) CLOCKS_PER_SEC);
