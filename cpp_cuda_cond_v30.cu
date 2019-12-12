@@ -56,26 +56,6 @@ __global__ void calculaDistancias(unsigned int num_pontos, int *X, int *Y, float
 /*-----------------------------------------------------------------------------------------------------------------*/
 /*-----------------------------------------------------------------------------------------------------------------*/
 
-/*
-__global__ void Calculo_Limites( unsigned int num_regioes, unsigned int num_pontos, float *LimFinal, unsigned int ptsRegiao, float delta_inicial, float *X )
-{
-
-	int index = blockIdx.x * blockDim.x + threadIdx.x; // thread corrente
-
-	//int stride = blockDim.x * gridDim.x; // tamanho do passo da thread
-
-	if(index < (num_regioes-1)) // Calculo do limite de todas regioes antes da ultima
-		LimFinal[index] = X[ptsRegiao * (index+1) -1] + delta_inicial; // Cálculo limite final
-	// Calculo da ultima regiao
-	else if(index == (num_regioes-1)) // Calculo do limite da ultima regiao
-		LimFinal[index] = X[num_pontos-1];
-
-}
-*/
-
-/*-----------------------------------------------------------------------------------------------------------------*/
-/*-----------------------------------------------------------------------------------------------------------------*/
-
 __global__ void Forca_Bruta(int num_pontos, int num_regioes, int ptsRegiao, int *X, int *Y, float *Minimos, float delta_inicial)
 {
 
