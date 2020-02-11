@@ -97,8 +97,8 @@ __global__ void Forca_Bruta(int num_pontos, int num_regioes, int ptsRegiao, int 
 		continua = true;
 
 		// Calculo do limite final da região
-		LimFinal = X[ptsRegiao * (i+1) - 1] + (int) delta_inicial;
-
+		LimFinal = X[ptsRegiao * (idb+1) - 1] + (int) delta_inicial;
+		
 		// for com uso de índices locais para threads
 		for( k=idl+1 ; k<ptsRegiao ; k++ ){ // cada thread executará esse laço.
 
