@@ -22,53 +22,6 @@
 #include <fstream>
 #include <iterator>
 
-/*-----------------------------------------------------------------------------------------------------------------*/
-/*-----------------------------------------------------------------------------------------------------------------*/
-
-// Funções
-void leitura(char *argv[], unsigned int *num_pontos, thrust::host_vector<int> &hX, thrust::host_vector<int> &hY)
-
-{
-	std::ifstream pts(argv[1], std::ios::binary);
-	std::ifstream file(argv[2], std::ios::binary);
-
-
-	if(file && pts)// Só verificando se não deu falha ao abrir os arquivos
-	{
-		// Inicializando num_pontos
-		pts.read((char*) num_pontos, sizeof(int));
-
- 		// Após obter num pontos pode-se alocar dinamicamente os host vectors
- 		hX.resize(*num_pontos);
- 		hY.resize(*num_pontos);	
- 		
- 		// Entao as coordenadas são lidas
-		file.read((char*)(hX.data()), hX.size()*sizeof(int));
-		file.read((char*)(hY.data()), hY.size()*sizeof(int));
-	}
-
-	pts.close();
-	file.close();
-}
-
-/*-----------------------------------------------------------------------------------------------------------------*/
-/*-----------------------------------------------------------------------------------------------------------------*/
-
-int calculaRegioes(unsigned int num_pontos, unsigned int ptsRegiao)
-{
-	int num_regioes;
-
-	num_regioes = num_pontos / ptsRegiao;	
-	
-	if( num_pontos % ptsRegiao != 0 )
-		num_regioes ++;
-	
-	return num_regioes;
-}
-
-/*-----------------------------------------------------------------------------------------------------------------*/
-/*-----------------------------------------------------------------------------------------------------------------*/
-
 // Kernels
 
 __global__ void calculaDistancias(unsigned int num_pontos, int *X, int *Y, float *dD)
@@ -132,7 +85,7 @@ __global__ void Forca_Bruta(int num_pontos, int num_regioes, int ptsRegiao, int 
 	// Cópia
 	Xs[idl] = X[idg];
 	Ys[idl] = Y[idg];
-   __syncthreads();
+   	__syncthreads();
 	// Fim cópia
 
 	xi = Xs[idl];
@@ -224,6 +177,67 @@ __global__ void Forca_Bruta(int num_pontos, int num_regioes, int ptsRegiao, int 
 			Minimos[idg] = delta_minimo;
 		}
 	}
+}
+
+/*-----------------------------------------------------------------------------------------------------------------*/
+/*-----------------------------------------------------------------------------------------------------------------*/
+
+// Funções
+void leitura(char *argv[], unsigned int *num_pontos, thrust::host_vector<int> &hX, thrust::host_vector<int> &hY)
+
+{
+	std::ifstream pts(argv[1], std::ios::binary);
+	std::ifstream file(argv[2], std::ios::binary);
+
+
+	if(file && pts)// Só verificando se não deu falha ao abrir os arquivos
+	{
+		// Inicializando num_pontos
+		pts.read((char*) num_pontos, sizeof(int));
+
+ 		// Após obter num pontos pode-se alocar dinamicamente os host vectors
+ 		hX.resize(*num_pontos);
+ 		hY.resize(*num_pontos);	
+ 		
+ 		// Entao as coordenadas são lidas
+		file.read((char*)(hX.data()), hX.size()*sizeof(int));
+		file.read((char*)(hY.data()), hY.size()*sizeof(int));
+	}
+
+	pts.close();
+	file.close();
+}
+
+/*-----------------------------------------------------------------------------------------------------------------*/
+/*-----------------------------------------------------------------------------------------------------------------*/
+
+int calculaRegioes(unsigned int num_pontos, unsigned int ptsRegiao)
+{
+	int num_regioes;
+
+	num_regioes = num_pontos / ptsRegiao;	
+	
+	if( num_pontos % ptsRegiao != 0 )
+		num_regioes ++;
+	
+	return num_regioes;
+}
+
+/*-----------------------------------------------------------------------------------------------------------------*/
+/*-----------------------------------------------------------------------------------------------------------------*/
+
+void geraDados(float y, int x)
+{
+	FILE *y_data = fopen("eixoVertical", "a");	
+	fprintf(y_data, "%g", y / (float) CLOCKS_PER_SEC);
+	fprintf(y_data, "%s", "\n");
+	
+	FILE *x_data = fopen("eixoHorizontal", "a");	
+	fprintf(x_data, "%d", x);
+	fprintf(x_data, "%s", "\n");
+
+	fclose(y_data);
+	fclose(x_data);
 }
 
 /*-----------------------------------------------------------------------------------------------------------------*/
@@ -383,5 +397,7 @@ int main(int argc, char *argv[])
 	clock_t fim = clock();
 	printf("Tempo total: %g segundos\n\n", (fim - inicio) / (float) CLOCKS_PER_SEC);
 
+	geraDados(fim-inicio, num_pontos);
+	
 	return 0;
 }
