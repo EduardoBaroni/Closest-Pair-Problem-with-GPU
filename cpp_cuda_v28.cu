@@ -325,7 +325,9 @@ int main(int argc, char *argv[])
 	clock_t fim = clock();
 	printf("Tempo total: %g segundos\n\n", (fim - inicio) / (float) CLOCKS_PER_SEC);
 	
-	geraDados(fim-inicio, num_pontos);
+	#if GRAFICO
+		geraDados(fim-inicio, num_pontos);
+	#endif
 	
 	return 0;
 }
