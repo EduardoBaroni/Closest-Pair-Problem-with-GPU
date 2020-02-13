@@ -228,11 +228,11 @@ int calculaRegioes(unsigned int num_pontos, unsigned int ptsRegiao)
 
 void geraDados(float y, int x)
 {
-	FILE *y_data = fopen("eixoVertical", "a");	
+	FILE *y_data = fopen("eixoVertical_cuda", "a");	
 	fprintf(y_data, "%g", y / (float) CLOCKS_PER_SEC);
 	fprintf(y_data, "%s", "\n");
 	
-	FILE *x_data = fopen("eixoHorizontal", "a");	
+	FILE *x_data = fopen("eixoHorizontal_cuda", "a");	
 	fprintf(x_data, "%d", x);
 	fprintf(x_data, "%s", "\n");
 
