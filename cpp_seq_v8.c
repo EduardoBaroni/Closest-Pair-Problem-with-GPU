@@ -286,7 +286,7 @@ float Forca_Bruta(int num_pontos, int num_regioes, int ptsRegiao, float delta_in
 	}
 
 	#if CONTADOR
-		printf("Distâncias calculadas = %d\n", cont);
+		printf("Distâncias calculadas = %ld\n", cont);
 	#endif
 
 	return delta_minimo;
