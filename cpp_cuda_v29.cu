@@ -126,7 +126,6 @@ __global__ void Forca_Bruta(int num_pontos, int num_regioes, int ptsRegiao, int 
 /*-----------------------------------------------------------------------------------------------------------------*/
 
 // Funções
-//PRESTE ATENÇÃO NO '&', significa que se esta passando vector por referência
 void leitura(char *argv[], unsigned int *num_pontos, thrust::host_vector<int> &hX, thrust::host_vector<int> &hY)
 
 {
@@ -151,6 +150,23 @@ void leitura(char *argv[], unsigned int *num_pontos, thrust::host_vector<int> &h
 
 	pts.close();
 	file.close();
+}
+
+/*-----------------------------------------------------------------------------------------------------------------*/
+/*-----------------------------------------------------------------------------------------------------------------*/
+
+void geraDados(float y, int x)
+{
+	FILE *y_data = fopen("eixoVertical", "a");	
+	fprintf(y_data, "%g", y / (float) CLOCKS_PER_SEC);
+	fprintf(y_data, "%s", "\n");
+	
+	FILE *x_data = fopen("eixoHorizontal", "a");	
+	fprintf(x_data, "%d", x);
+	fprintf(x_data, "%s", "\n");
+
+	fclose(y_data);
+	fclose(x_data);
 }
 
 /*-----------------------------------------------------------------------------------------------------------------*/
@@ -325,5 +341,7 @@ int main(int argc, char *argv[])
 	clock_t fim = clock();
 	printf("Tempo total: %g segundos\n\n", (fim - inicio) / (float) CLOCKS_PER_SEC);
 
+	geraDados(fim-inicio, num_pontos);
+	
 	return 0;
 }
