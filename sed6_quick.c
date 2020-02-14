@@ -407,7 +407,7 @@ int *parse(char* argv[], unsigned int* num_pontos) {
 
 	//printf("Dim: %d, Points: %u\n", dim, (unsigned)(filesize / sizeof(int)) / dim);
 
-	int *P = (int*)malloc(*num_pontos * sizeof(int));
+	int *P = (int*)malloc( (*num_pontos*2) * sizeof(int));
 	if (P == NULL) error("Memory Allocation Failed");
 
 	//fread(P, sizeof(int), filesize / sizeof(int), input);
@@ -415,13 +415,9 @@ int *parse(char* argv[], unsigned int* num_pontos) {
 	if (fread( X, sizeof(int), *num_pontos, entrada2));
 	if (fread( Y, sizeof(int), *num_pontos, entrada2));
 	
-	for(int i = 0; i < *num_pontos * 2; i++)
-	{
-		if (i % 2 == 0)
-			P[i] = X[i];
-		else
-			P[i] = Y[i];
-	}
+	// Copiando arquivos de maneira intercalada para P
+	for(int i = 0; i < *num_pontos * 2; i++) 
+		P[i] = i % 2 == 0 ? X[i] : Y[i];
 
 
 	fclose(entrada1);
