@@ -77,7 +77,7 @@ int main(int argc, char* argv[]) {
 	/* Temporizacao */
 	double time = 0.0;
 	double start, end;
-	if (argc != 2)
+	if (argc != 3)
 		usage(argv[0]);
 
 	//Parse
