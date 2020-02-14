@@ -398,8 +398,8 @@ int *parse(char* argv[], unsigned int* num_pontos) {
 	int *Y;
 	if (fread( num_pontos, sizeof(int), 1, entrada1))
 	{
-		*X = (int *) malloc( *num_pontos * sizeof(int) );
-		*Y = (int *) malloc( *num_pontos * sizeof(int) );
+		X = (int *) malloc( *num_pontos * sizeof(int) );
+		Y = (int *) malloc( *num_pontos * sizeof(int) );
 	}
 
 	//unsigned int filesize = getSize(argv[1]);
@@ -411,8 +411,8 @@ int *parse(char* argv[], unsigned int* num_pontos) {
 
 	//fread(P, sizeof(int), filesize / sizeof(int), input);
 	// TODO: throw exception
-	if (fread( *X, sizeof(int), *num_pontos, entrada2));
-	if (fread( *Y, sizeof(int), *num_pontos, entrada2));
+	if (fread( X, sizeof(int), *num_pontos, entrada2));
+	if (fread( Y, sizeof(int), *num_pontos, entrada2));
 	
 	for(int i = 0; i < *num_pontos * 2; i++)
 	{
