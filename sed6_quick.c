@@ -89,7 +89,8 @@ int main(int argc, char* argv[]) {
 	unsigned int n;
 
 	int* P = parse(argv, &n);
-
+	
+	printf("chegou??\n");
 	printV(P, n);
 
 	fclose(input);
