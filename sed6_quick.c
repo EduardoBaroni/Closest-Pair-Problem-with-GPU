@@ -58,13 +58,13 @@ int random_partition(int* P, int start, int end);
 
 /* Checa se a distancia em Y entre dois pontos eh menor que o min */
 int check(int *p1, int *p2);
-/* Verifica se os pontos estão em lados opostos em relação ao middle */
+/* Verifica se os pontos estÃ£o em lados opostos em relaÃ§Ã£o ao middle */
 int checkX(int *p1, int *p2, int middle);
-/* Checa se a distancia entre dois pontos é menor que o min */
+/* Checa se a distancia entre dois pontos Ã© menor que o min */
 void dist(int *p1, int *p2);
 /* Se pass = 1 faz o mergesort em x */
 /* Se pass = 2 faz o mergesort em y e resolve o problema de conquista do divide-conquer algorithm */
-//Faz as verificações relacionados à distância delta
+//Faz as verificaÃ§Ãµes relacionados Ã  distÃ¢ncia delta
 void delta_check(int *c, int middle, int **p1, int **p2, int **p3, int **p4);
 
 void sortBU(int* arr, int size);
@@ -312,7 +312,7 @@ int check(int *p1, int *p2)
 }
 
 /*
-Verifica a posição em X dos pontos em referência ao middle
+Verifica a posiÃ§Ã£o em X dos pontos em referÃªncia ao middle
 Return 1 : Lados opostos
 Return 0 : Mesmos lados
 */
@@ -393,11 +393,13 @@ int *parse(char* argv[], unsigned int* num_pontos) {
 	//	printf("Erro na leitura do arquivo de entrada.");
 	//	return 0;
 	//}
-
+	
+	int *X;
+	int *Y;
 	if (fread( num_pontos, sizeof(int), 1, entrada1))
 	{
-		int *X = (int *) malloc( *num_pontos * sizeof(int) );
-		int *Y = (int *) malloc( *num_pontos * sizeof(int) );
+		*X = (int *) malloc( *num_pontos * sizeof(int) );
+		*Y = (int *) malloc( *num_pontos * sizeof(int) );
 	}
 
 	//unsigned int filesize = getSize(argv[1]);
