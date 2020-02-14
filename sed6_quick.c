@@ -90,7 +90,7 @@ int main(int argc, char* argv[]) {
 
 	int* P = parse(argv, &n);
 
-	//printV(P, n);
+	printV(P, n);
 
 	fclose(input);
 	end = omp_get_wtime();
