@@ -434,8 +434,8 @@ Retorna o tamanho do arquivo em bytes de 'file'
 */
 
 unsigned getSize(char* file) {
-	struct _fstat buf;
-	unsigned result = _fstat(file, &buf);
+	//struct _fstat buf;
+	//unsigned result = _fstat(file, &buf);
 	if (result != 0)
 	{
 		printf("Erro na leitura do tamanho do arquivo.");
