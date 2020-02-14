@@ -433,18 +433,18 @@ int *parse(char* argv[], unsigned int* num_pontos) {
 Retorna o tamanho do arquivo em bytes de 'file'
 */
 
-unsigned getSize(char* file) {
-	//struct _fstat buf;
-	//unsigned result = _fstat(file, &buf);
-	if (result != 0)
-	{
-		printf("Erro na leitura do tamanho do arquivo.");
-		return 0;
-	}
-	unsigned long tam = buf.st_size;
-
-	return tam;
-}
+//unsigned getSize(char* file) {
+//	struct _fstat buf;
+//	unsigned result = _fstat(file, &buf);
+//	if (result != 0)
+//	{
+//		printf("Erro na leitura do tamanho do arquivo.");
+//		return 0;
+//	}
+//	unsigned long tam = buf.st_size;
+//
+//	return tam;
+//}
 
 void usage(char* program)
 {
