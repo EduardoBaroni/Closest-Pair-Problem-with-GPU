@@ -10,11 +10,11 @@ Melhorias:
 #endif
 
 #include <stdio.h>
-//#include <string.h>
+#include <string.h>
 #include <stdlib.h>
-//#include <limits.h>
+#include <limits.h>
 #include <math.h>
-//#include <time.h>
+#include <time.h>
 #include <float.h>
 #include <omp.h>
 #include <sys/types.h>
