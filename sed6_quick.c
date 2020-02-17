@@ -405,7 +405,7 @@ int *parse(char* argv[], unsigned int* num_pontos, int **X, int **Y) {
 		*Y = (int *) malloc( *num_pontos * sizeof(int) );
 	}
 	printf("%d\n", *num_pontos);
-	printf("%d %d\n", &(*X)[0], &(*Y)[0] );
+	printf("%d %d\n", (*X), (*Y) );
 	//unsigned int filesize = getSize(argv[1]);
 
 	//printf("Dim: %d, Points: %u\n", dim, (unsigned)(filesize / sizeof(int)) / dim);
