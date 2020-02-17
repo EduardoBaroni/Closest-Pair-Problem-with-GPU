@@ -115,7 +115,7 @@ int main(int argc, char* argv[]) {
 	
 	/* Ordenacao em Y */
 	sortBU(P, n);
-
+	
 	printf("Closest pair: [%d,%d] e [%d,%d] com dist: %.2f\n", cp1[0], cp1[1], cp2[0], cp2[1], min);
 	printf("Comparacoes: %lld\n", comparacoes);
 
@@ -417,7 +417,7 @@ int *parse(char* argv[], unsigned int* num_pontos, int **X, int **Y) {
 	if (fread( *X, sizeof(int), *num_pontos, entrada2));
 	if (fread( *Y, sizeof(int), *num_pontos, entrada2));
 	
-	printf("%d\n", *num_pontos);
+	
 	printf("%d %d\n", (*X)[0], (*Y)[0] );
 	
 	// Copiando arquivos de maneira intercalada para P
@@ -433,9 +433,10 @@ int *parse(char* argv[], unsigned int* num_pontos, int **X, int **Y) {
 			j++;
 		}	
 	}
-	for(i = 0; *num_pontos-1 > i; i+2)
+	for(i = 0; (*num_pontos)-1 > i; i+2)
 		printf("%d %d\n", P[i], P[i+1]);
-	//printf("%d %d\n", P[0], P[1] );
+	printf("%d\n", *num_pontos);
+	printf("%d %d\n", P[0], P[1] );
 	
 	fclose(entrada1);
 	fclose(entrada2);
