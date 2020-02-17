@@ -418,7 +418,7 @@ int *parse(char* argv[], unsigned int* num_pontos, int **X, int **Y) {
 	
 	// Copiando arquivos de maneira intercalada para P
 	for(int i = 0; i < *num_pontos * 2; i++) 
-		P[i] = i % 2 == 0 ? X[i] : Y[i]; // dúvida no acesso aos vetores
+		P[i] = i % 2 == 0 ? (*X)[i] : (*Y)[i]; // dúvida no acesso aos vetores
 	
 	fclose(entrada1);
 	fclose(entrada2);
