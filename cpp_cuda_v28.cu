@@ -129,9 +129,6 @@ void leitura(char *argv[], unsigned int *num_pontos, thrust::host_vector<int>& h
  		// Entao as coordenadas são lidas
 		file.read((char*)(hX.data()), hX.size()*sizeof(int));
 		file.read((char*)(hY.data()), hY.size()*sizeof(int));
-		
-		for(int i = 0; *num_pontos > i; i++)
-			std::cout << hX[i] << " " << hY[i] << std::endl;
 	}
 
 	pts.close();
