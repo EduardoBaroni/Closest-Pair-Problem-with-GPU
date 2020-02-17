@@ -433,8 +433,8 @@ int *parse(char* argv[], unsigned int* num_pontos, int **X, int **Y) {
 			j++;
 		}	
 	}
-	for(int i = 0; *num_pontos > i; i++)
-		printf("%d %d\n", hX[i], hY[i]);
+	for(int i = 0; *num_pontos-1 > i; i+2)
+		printf("%d %d\n", P[i], P[i+1]);
 	//printf("%d %d\n", P[0], P[1] );
 	
 	fclose(entrada1);
