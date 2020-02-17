@@ -75,17 +75,17 @@ void mergeBU_X(int* src1, int* src2, int len1, int len2, int* dest);
 
 int main(int argc, char* argv[]) {
 	/* Temporizacao */
-	double time = 0.0;
-	double start, end;
+	//double time = 0.0;
+	//double start, end;
 	if (argc != 3)
 		usage(argv[0]);
 
 	//Parse
 	//start = omp_get_wtime();
-	FILE* input;
-	input = fopen(argv[1], "r");
-	if (input == NULL)
-		error("Erro na leitura do arquivo");
+	//FILE* input;
+	//input = fopen(argv[1], "r");
+	//if (input == NULL)
+	//	error("Erro na leitura do arquivo");
 	
 	unsigned int n;
 	int *X, *Y;
@@ -93,7 +93,7 @@ int main(int argc, char* argv[]) {
 	
 	//printV(P, n);
 
-	fclose(input);
+	//fclose(input);
 	//end = omp_get_wtime();
 	//time = end - start;
 	//printf("Time parser: %.3f seconds\n", time);
@@ -403,7 +403,7 @@ int *parse(char* argv[], unsigned int* num_pontos, int **X, int **Y) {
 		*X = (int *) malloc( *num_pontos * sizeof(int) );
 		*Y = (int *) malloc( *num_pontos * sizeof(int) );
 	}
-
+	printf("%d %d\n", (*X)[0], (*Y)[0] );
 	//unsigned int filesize = getSize(argv[1]);
 
 	//printf("Dim: %d, Points: %u\n", dim, (unsigned)(filesize / sizeof(int)) / dim);
