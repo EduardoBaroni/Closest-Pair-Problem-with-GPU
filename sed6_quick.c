@@ -436,10 +436,14 @@ int *parse(char* argv[], unsigned int* num_pontos, int **X, int **Y) {
 
 	}
 	printf("%d\n", n);
-	for(i = 0; n-1 > i; i+2)
-		printf("%d %d\n", P[i], P[i+1]);
+	//for(i = 0; n-1 > i; i+2)
+	//	printf("%d %d\n", P[i], P[i+1]);
 	
 	printf("%d %d\n", P[0], P[1] );
+	printf("%d %d\n", P[2], P[3] );
+	printf("%d %d\n", P[4], P[5] );
+	printf("%d %d\n", P[6], P[7] );
+	printf("%d %d\n", P[8], P[9] );
 	
 	fclose(entrada1);
 	fclose(entrada2);
