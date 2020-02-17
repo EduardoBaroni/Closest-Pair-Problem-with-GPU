@@ -16,7 +16,7 @@ Melhorias:
 #include <math.h>
 #include <time.h>
 #include <float.h>
-#include <omp.h>
+//#include <omp.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 
@@ -39,7 +39,7 @@ int *middles;
 long long int comparacoes = 0;
 
 /* Le o arquivo e pega seus valores */
-int *parse(char* argv[], unsigned int* n);
+int *parse(char* argv[], unsigned int* n, int** X, int** Y);
 
 /* Auxiliar para saber o tamanho do arquivo */
 unsigned getSize(char* file);
@@ -81,52 +81,56 @@ int main(int argc, char* argv[]) {
 		usage(argv[0]);
 
 	//Parse
-	start = omp_get_wtime();
+	//start = omp_get_wtime();
 	FILE* input;
 	input = fopen(argv[1], "r");
 	if (input == NULL)
 		error("Erro na leitura do arquivo");
+	
 	unsigned int n;
-
-	int* P = parse(argv, &n);
+	int *X, *Y;
+	int* P = parse(argv, &n, &X, &Y);
 	
 	//printV(P, n);
 
 	fclose(input);
-	end = omp_get_wtime();
-	time = end - start;
-	printf("Time parser: %.3f seconds\n", time);
-
+	//end = omp_get_wtime();
+	//time = end - start;
+	//printf("Time parser: %.3f seconds\n", time);
+	
 	//OpenMP
-	int num_threads;
-
+	//int num_threads;
 
 	//Solucao
-	start = omp_get_wtime();
+	clock_t inicio = clock();
+	//start = omp_get_wtime();
 
 	/* Ordenacao em X */
 	random_quick_sort(P, 0, (unsigned int)n - 1);
 
-	end = omp_get_wtime();
-	time = end - start;
-	printf("Time sort em X: %.3f seconds\n", time);
+	//end = omp_get_wtime();
+	//time = end - start;
+	//printf("Time sort em X: %.3f seconds\n", time);
 	//printV(P, n);
+	
 	/* Ordenacao em Y */
 	sortBU(P, n);
-
 
 	printf("Closest pair: [%d,%d] e [%d,%d] com dist: %.2f\n", cp1[0], cp1[1], cp2[0], cp2[1], min);
 	printf("Comparacoes: %lld\n", comparacoes);
 
 	free(P);
 
-	end = omp_get_wtime();
-	time = end - start;
-	printf("Time solution: %.3f seconds\n", time);
-
+	//end = omp_get_wtime();
+	//time = end - start;
+	//printf("Time solution: %.3f seconds\n", time);
+	
+	clock_t fim = clock();
+	printf("Tempo total: %g segundos\n\n", (fim - inicio) / (float) CLOCKS_PER_SEC);
+	
 	//printV(P, n); //se for ativar tem que comentar o free(P)
-
 	//getchar();
+	
 	return 0;
 }
 
@@ -381,8 +385,8 @@ void delta_check(int *c, int middle, int **p1, int **p2, int **p3, int **p4)
 	}
 }
 
-int *parse(char* argv[], unsigned int* num_pontos) {
-	printf("File: '%s'\n", argv[1]);
+int *parse(char* argv[], unsigned int* num_pontos, int **X, int **Y) {
+	//printf("File: '%s'\n", argv[1]);
 	
 	FILE *entrada1, *entrada2;
 
@@ -394,12 +398,10 @@ int *parse(char* argv[], unsigned int* num_pontos) {
 	//	return 0;
 	//}
 	
-	int *X;
-	int *Y;
 	if (fread( num_pontos, sizeof(int), 1, entrada1))
 	{
-		X = (int *) malloc( *num_pontos * sizeof(int) );
-		Y = (int *) malloc( *num_pontos * sizeof(int) );
+		*X = (int *) malloc( *num_pontos * sizeof(int) );
+		*Y = (int *) malloc( *num_pontos * sizeof(int) );
 	}
 
 	//unsigned int filesize = getSize(argv[1]);
@@ -410,13 +412,13 @@ int *parse(char* argv[], unsigned int* num_pontos) {
 	if (P == NULL) error("Memory Allocation Failed");
 
 	//fread(P, sizeof(int), filesize / sizeof(int), input);
-	// TODO: throw exception
-	if (fread( X, sizeof(int), *num_pontos, entrada2));
-	if (fread( Y, sizeof(int), *num_pontos, entrada2));
+	
+	if (fread( *X, sizeof(int), *num_pontos, entrada2));
+	if (fread( *Y, sizeof(int), *num_pontos, entrada2));
 	
 	// Copiando arquivos de maneira intercalada para P
 	for(int i = 0; i < *num_pontos * 2; i++) 
-		P[i] = i % 2 == 0 ? X[i] : Y[i];
+		P[i] = i % 2 == 0 ? X[i] : Y[i]; // dúvida no acesso aos vetores
 	
 	fclose(entrada1);
 	fclose(entrada2);
