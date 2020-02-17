@@ -386,8 +386,8 @@ void delta_check(int *c, int middle, int **p1, int **p2, int **p3, int **p4)
 }
 
 int *parse(char* argv[], unsigned int* num_pontos, int **X, int **Y) {
-	printf("File: '%s'\n", argv[1]);
-	printf("File: '%s'\n", argv[2]);
+	//printf("File: '%s'\n", argv[1]);
+	//printf("File: '%s'\n", argv[2]);
 	
 	FILE *entrada1, *entrada2;
 
@@ -419,9 +419,7 @@ int *parse(char* argv[], unsigned int* num_pontos, int **X, int **Y) {
 	
 	// Copiando arquivos de maneira intercalada para P
 	
-	int n = *num_pontos;
-	printf("%d\n", n);
-	
+	int n = *num_pontos;	
 	int i = 0, j = 0, k = 0;
 	while(n * 2 > k) 
 	{
@@ -435,20 +433,6 @@ int *parse(char* argv[], unsigned int* num_pontos, int **X, int **Y) {
 		}
 		k++;
 	}
-	
-	//for(i = 0; n-1 > i; i+2)
-	//	printf("%d %d\n", P[i], P[i+1]);
-	
-	printf("%d %d\n", P[0], P[1] );
-	printf("%d %d\n", P[2], P[3] );
-	printf("%d %d\n", P[4], P[5] );
-	printf("%d %d\n", P[6], P[7] );
-	printf("%d %d\n", P[8], P[9] );
-	printf("%d %d\n", P[10], P[11] );
-	printf("%d %d\n", P[12], P[13] );
-	printf("%d %d\n", P[14], P[15] );
-	printf("%d %d\n", P[16], P[17] );
-	printf("%d %d\n", P[18], P[19] );
 	
 	fclose(entrada1);
 	fclose(entrada2);
