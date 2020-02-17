@@ -404,8 +404,7 @@ int *parse(char* argv[], unsigned int* num_pontos, int **X, int **Y) {
 		*X = (int *) malloc( *num_pontos * sizeof(int) );
 		*Y = (int *) malloc( *num_pontos * sizeof(int) );
 	}
-	printf("%d\n", *num_pontos);
-	printf("%d %d\n", (**X), (**Y) );
+	
 	//printf("%d %d\n", (**X)[0], (**Y)[0] );
 	//unsigned int filesize = getSize(argv[1]);
 
@@ -418,7 +417,8 @@ int *parse(char* argv[], unsigned int* num_pontos, int **X, int **Y) {
 	
 	if (fread( *X, sizeof(int), *num_pontos, entrada2));
 	if (fread( *Y, sizeof(int), *num_pontos, entrada2));
-	
+	printf("%d\n", *num_pontos);
+	printf("%d %d\n", (**X), (**Y) );
 	// Copiando arquivos de maneira intercalada para P
 	for(int i = 0; i < *num_pontos * 2; i++) 
 		P[i] = i % 2 == 0 ? (*X)[i] : (*Y)[i]; // dúvida no acesso aos vetores
