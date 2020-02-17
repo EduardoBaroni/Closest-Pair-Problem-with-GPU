@@ -426,14 +426,16 @@ int *parse(char* argv[], unsigned int* num_pontos, int **X, int **Y) {
 	{
 		if (i % 2 == 0){
 			P[i] = (*X)[i];
+			printf("%d\n", P[i] );
 			i++;
 		}
 		else{
 			P[i] = (*Y)[j];
+			printf("%d\n", P[i] );
 			j++;
 		}	
 	}
-	printf("%d %d\n", P[0], P[1] );
+	//printf("%d %d\n", P[0], P[1] );
 	
 	fclose(entrada1);
 	fclose(entrada2);
