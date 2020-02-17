@@ -422,19 +422,19 @@ int *parse(char* argv[], unsigned int* num_pontos, int **X, int **Y) {
 	
 	// Copiando arquivos de maneira intercalada para P
 	int i = 0, j = 0;
-	while(i < *num_pontos * 2) 
+	while(*num_pontos * 2 > i) 
 	{
 		if (i % 2 == 0){
 			P[i] = (*X)[i];
-			printf("%d\n", P[i] );
 			i++;
 		}
 		else{
 			P[i] = (*Y)[j];
-			printf("%d\n", P[i] );
 			j++;
 		}	
 	}
+	for(int i = 0; *num_pontos > i; i++)
+		printf("%d %d\n", hX[i], hY[i]);
 	//printf("%d %d\n", P[0], P[1] );
 	
 	fclose(entrada1);
