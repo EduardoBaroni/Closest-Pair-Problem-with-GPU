@@ -431,11 +431,13 @@ int *parse(char* argv[], unsigned int* num_pontos, int **X, int **Y) {
 		else{
 			P[i] = (*Y)[j];
 			j++;
-		}	
+		}
+		printf("%d\n", *num_pontos);
+		printf("%d\n", *num_pontos * 2);
 	}
 	for(i = 0; (*num_pontos)-1 > i; i+2)
 		printf("%d %d\n", P[i], P[i+1]);
-	printf("%d\n", *num_pontos);
+	
 	printf("%d %d\n", P[0], P[1] );
 	
 	fclose(entrada1);
