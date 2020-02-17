@@ -426,11 +426,11 @@ int *parse(char* argv[], unsigned int* num_pontos, int **X, int **Y) {
 	while(n * 2 > k) 
 	{
 		if (k % 2 == 0){
-			P[i] = (*X)[i];
+			P[k] = (*X)[i];
 			i++;
 		}
 		else{
-			P[i] = (*Y)[j];
+			P[k] = (*Y)[j];
 			j++;
 		}
 		k++;
