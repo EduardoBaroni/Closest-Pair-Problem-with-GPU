@@ -43,7 +43,11 @@ __global__ void calculaDistancias(unsigned int num_pontos, int *X, int *Y, float
 			dD[index] =   sqrt( (double) (A + B) );
 
 		}
+		else{
 
+			dD[index] = INT_MAX;
+
+		}
 	}
 
 }
