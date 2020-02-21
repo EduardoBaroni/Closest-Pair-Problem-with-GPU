@@ -129,6 +129,7 @@ void leitura(char *argv[], unsigned int *num_pontos, thrust::host_vector<int>& h
  		// Entao as coordenadas são lidas
 		file.read((char*)(hX.data()), hX.size()*sizeof(int));
 		file.read((char*)(hY.data()), hY.size()*sizeof(int));
+
 	}
 
 	pts.close();
@@ -148,23 +149,6 @@ int calculaRegioes(unsigned int num_pontos, unsigned int ptsRegiao)
 		num_regioes += 1;
 	
 	return num_regioes;
-}
-
-/*-----------------------------------------------------------------------------------------------------------------*/
-/*-----------------------------------------------------------------------------------------------------------------*/
-
-void geraDados(float y, int x)
-{
-	FILE *y_data = fopen("eixoVertical_cuda", "a");	
-	fprintf(y_data, "%g", y / (float) CLOCKS_PER_SEC);
-	fprintf(y_data, "%s", "\n");
-	
-	FILE *x_data = fopen("eixoHorizontal_cuda", "a");	
-	fprintf(x_data, "%d", x);
-	fprintf(x_data, "%s", "\n");
-
-	fclose(y_data);
-	fclose(x_data);
 }
 
 /*-----------------------------------------------------------------------------------------------------------------*/
@@ -323,10 +307,6 @@ int main(int argc, char *argv[])
 
 	clock_t fim = clock();
 	printf("Tempo total: %g segundos\n\n", (fim - inicio) / (float) CLOCKS_PER_SEC);
-	
-	#if GRAFICO
-		geraDados(fim-inicio, num_pontos);
-	#endif
-	
+
 	return 0;
 }
