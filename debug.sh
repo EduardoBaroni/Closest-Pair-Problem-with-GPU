@@ -29,28 +29,28 @@ echo "Leitura | Transferência |  Ordenação  | Calcula Delta Incial | Reduçã
 echo "Leitura | Transferência |  Ordenação  | Calcula Delta Incial | Redução 1 |  Força Bruta  | Redução 2 |   TOTAL   || Delta Inicial | 
 	  Delta Minimo |" > paralelo32.txt	  
 
-for (( i = 0; 5 > i; i++)); do
+for (( i = 0; 6 > i; i++)); do
 	!./seq_7 nPontos.bin coordenadas.bin >> seq7.txt			
 done
-for (( i = 0; 5 > i; i++)); do
+for (( i = 0; 6 > i; i++)); do
 	!./seq_8 nPontos.bin coordenadas.bin >> seq8.txt			
 done
-for (( i = 0; 5 > i; i++)); do
+for (( i = 0; 6 > i; i++)); do
 	!./seq_9 nPontos.bin coordenadas.bin >> seq9.txt			
 done
-for (( i = 0; 5 > i; i++)); do
+for (( i = 0; 6 > i; i++)); do
 	!./paralelo28 nPontos.bin coordenadas.bin >> paralelo28.txt			
 done
-for (( i = 0; 5 > i; i++)); do
+for (( i = 0; 6 > i; i++)); do
 	!./paralelo29 nPontos.bin coordenadas.bin >> paralelo29.txt			
 done
-for (( i = 0; 5 > i; i++)); do
+for (( i = 0; 6 > i; i++)); do
 	!./paralelo30 nPontos.bin coordenadas.bin >> paralelo30.txt			
 done
-for (( i = 0; 5 > i; i++)); do
+for (( i = 0; 6 > i; i++)); do
 	!./paralelo31 nPontos.bin coordenadas.bin >> paralelo31.txt			
 done
-for (( i = 0; 5 > i; i++)); do
+for (( i = 0; 6 > i; i++)); do
 	!./paralelo32 nPontos.bin coordenadas.bin >> paralelo32.txt			
 done
 

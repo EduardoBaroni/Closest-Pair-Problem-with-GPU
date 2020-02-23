@@ -236,7 +236,7 @@ int main(int argc, char *argv[])
 	// Declaração de variáveis:
 	unsigned int num_regioes, num_pontos, ptsRegiao;
 	int maxThreadBloco;
-	float delta_inicial, delta_minimo;
+	float delta_inicial;
 
 	// Capturando o máximo número de threads por bloco da máquina
 	cudaDeviceGetAttribute(&maxThreadBloco, cudaDevAttrMaxThreadsPerBlock, 0);
@@ -374,8 +374,8 @@ int main(int argc, char *argv[])
 	thrust::device_vector<float>::iterator iter2 = thrust::min_element(dMin.begin(), dMin.end());
 	
 	#if DEBUG
-		delta_minimo = *iter2;
-		
+		float delta_minimo = *iter2;
+
 		clock_t fim_reducao2 = clock();
 		float reducao2Tempo = (fim_reducao2 - inicio_reducao2) / (float) CLOCKS_PER_SEC;
 	#endif
