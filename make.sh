@@ -5,6 +5,7 @@ gcc gerador_bin_v5.c -pedantic -std=c11 -o gerador
 gcc cpp_seq_v7.c -pedantic -std=c11 -O3 -o seq_7 -lm
 gcc cpp_seq_v8.c -pedantic -std=c11 -O3 -o seq_8 -lm
 gcc cpp_seq_v9.c -pedantic -std=c11 -O3 -o seq_9 -lm
+gcc sed6_quick.c -pedantic -std=c11 -O3 -o sed6 -lm
 nvcc cpp_cuda_v28.cu -O3 -o paralelo28
 nvcc cpp_cuda_v29.cu -O3 -o paralelo29
 nvcc cpp_cuda_v30.cu -O3 -o paralelo30
@@ -31,6 +32,9 @@ for (( i = 0; 6 > i; i++)); do
 done
 for (( i = 0; 6 > i; i++)); do
 	./seq_9 nPontos.bin coordenadas.bin >> seq9.txt			
+done
+for (( i = 0; 6 > i; i++)); do
+	./sed6 nPontos.bin coordenadas.bin >> seq9.txt			
 done
 for (( i = 0; 6 > i; i++)); do
 	./paralelo28 nPontos.bin coordenadas.bin >> paralelo28.txt
