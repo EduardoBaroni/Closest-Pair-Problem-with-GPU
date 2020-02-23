@@ -48,7 +48,7 @@ int main(int argc, char *argv[])
 	
 	#if DEBUG
 		clock_t fim_leitura = clock();
-		printf("\nTempo da função leitura: %g segundos\n\n", (fim_leitura - inicio_leitura) / (float) CLOCKS_PER_SEC);
+		float leituraTempo = (fim_leitura - inicio_leitura) / (float) CLOCKS_PER_SEC;
 	#endif
 /*-----------------------------------------------------------------------------------------------------------------*/
 /*-----------------------------------------------------------------------------------------------------------------*/
@@ -81,7 +81,7 @@ int main(int argc, char *argv[])
 
 	#if DEBUG
 		clock_t fim_ordenacao = clock();
-		printf("Tempo da função de ordenação: %g segundos\n\n", (fim_ordenacao - inicio_ordenacao) / (float) CLOCKS_PER_SEC);
+		float ordenacaoTempo = (fim_ordenacao - inicio_ordenacao) / (float) CLOCKS_PER_SEC;
 	#endif
 /*-----------------------------------------------------------------------------------------------------------------*/
 /*-----------------------------------------------------------------------------------------------------------------*/
@@ -96,10 +96,9 @@ int main(int argc, char *argv[])
 	
 	#if DEBUG
 		clock_t fim_calc_distancias = clock();
-		printf("Tempo da função Calcula Distâncias: %g segundos\n\n", (fim_calc_distancias - inicio_calc_distancias) / (float) CLOCKS_PER_SEC);
+		float distanciasTempo = (fim_calc_distancias - inicio_calc_distancias) / (float) CLOCKS_PER_SEC;
 	#endif
 		
-	printf("\n\nDelta Inicial: %lf\n\n", delta_inicial);
 /*-----------------------------------------------------------------------------------------------------------------*/
 /*-----------------------------------------------------------------------------------------------------------------*/
 
@@ -127,27 +126,35 @@ int main(int argc, char *argv[])
 	#endif
 
 	delta_minimo = Forca_Bruta(num_pontos, num_regioes, ptsRegiao, delta_inicial, X, Y);
-
-	// Imprimindo resultados:
 	
 	#if DEBUG
 		clock_t fim_forca_bruta = clock();
-		printf("Tempo da função Força Bruta: %g segundos\n\n", (fim_forca_bruta - inicio_forca_bruta) / (float) CLOCKS_PER_SEC);
+		float forcaBrutaTempo = (fim_forca_bruta - inicio_forca_bruta) / (float) CLOCKS_PER_SEC;
 	#endif
-	printf("\nDelta mínimo:\n%lf\n", delta_minimo);
-	
-	clock_t fim = clock();
-/*-----------------------------------------------------------------------------------------------------------------*/
-/*-----------------------------------------------------------------------------------------------------------------*/
 
-	printf("Tempo total: %g segundos\n\n", (fim - inicio) / (float) CLOCKS_PER_SEC);
+/*-----------------------------------------------------------------------------------------------------------------*/	
+/*-----------------------------------------------------------------------------------------------------------------*/
+	//Imprimindo resultados
+
+	clock_t fim = clock();
+	float tempoTotal = (fim - inicio) / (float) CLOCKS_PER_SEC;
 	
+	#if DEBUG
+		printf("%.5f      %.5f            %.5f            %.5f       %.5f       %lf      %lf\n", 
+			leituraTempo, ordenacaoTempo, distanciasTempo, forcaBrutaTempo, tempoTotal, delta_inicial, delta_minimo);
+	#else
+		printf("   %.5f\n", tempoTotal);
+	#endif
+
 	#if GRAFICO
 		geraDados(fim-inicio, num_pontos);
 	#endif
 	
 	return 0;
 }
+
+/*-----------------------------------------------------------------------------------------------------------------*/
+/*-----------------------------------------------------------------------------------------------------------------*/
 
 void geraDados(float y, int x)
 {
@@ -216,7 +223,7 @@ float Forca_Bruta(int num_pontos, int num_regioes, int ptsRegiao, float delta_in
 	long int A,B;
 	int lim_final;
 	
-	#if CONTADOR
+	#if DEBUG
 		long int cont = 0;
 	#endif
 
@@ -231,7 +238,7 @@ float Forca_Bruta(int num_pontos, int num_regioes, int ptsRegiao, float delta_in
 
 				if( X[j]!=X[k] || Y[j]!=Y[k] )
 				{
-					#if CONTADOR
+					#if DEBUG
 						cont++;
 					#endif
 
@@ -254,7 +261,7 @@ float Forca_Bruta(int num_pontos, int num_regioes, int ptsRegiao, float delta_in
 
 			if( X[j]!=X[k] || Y[j]!=Y[k] )
 			{
-				#if CONTADOR
+				#if DEBUG
 					cont++;
 				#endif
 
@@ -269,8 +276,8 @@ float Forca_Bruta(int num_pontos, int num_regioes, int ptsRegiao, float delta_in
 		}
 	}
 
-	#if CONTADOR
-		printf("Distâncias calculadas = %ld\n", cont);
+	#if DEBUG
+		printf("%ld       ", cont);
 	#endif
 
 	return delta_minimo;

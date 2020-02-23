@@ -263,7 +263,7 @@ int main(int argc, char *argv[])
 	
  	#if DEBUG
 		clock_t fim_leitura = clock();
-		printf("\nTempo da função leitura: %g segundos\n\n", (fim_leitura - inicio_leitura) / (float) CLOCKS_PER_SEC);
+		float leituraTempo = (fim_leitura - inicio_leitura) / (float) CLOCKS_PER_SEC;
 	#endif
 
 /*-----------------------------------------------------------------------------------------------------------------*/
@@ -280,7 +280,7 @@ int main(int argc, char *argv[])
 	
 	#if DEBUG
 		clock_t fim_transferencia = clock();
-		printf("Tempo da transferencia: %g segundos\n\n", (fim_transferencia - inicio_transferencia) / (float) CLOCKS_PER_SEC);
+		float transfTempo = (fim_transferencia - inicio_transferencia) / (float) CLOCKS_PER_SEC;
 	#endif
 
 /*-----------------------------------------------------------------------------------------------------------------*/
@@ -296,7 +296,7 @@ int main(int argc, char *argv[])
 	
 	#if DEBUG
 		clock_t fim_ordenacao = clock();
-		printf("Tempo da função de ordenação: %g segundos\n\n", (fim_ordenacao - inicio_ordenacao) / (float) CLOCKS_PER_SEC);
+		float ordenacaoTempo = (fim_ordenacao - inicio_ordenacao) / (float) CLOCKS_PER_SEC;
 	#endif
 
 /*-----------------------------------------------------------------------------------------------------------------*/
@@ -331,7 +331,7 @@ int main(int argc, char *argv[])
 
  	#if DEBUG
 		clock_t fim_calc_distancias = clock();
-		printf("Tempo do kernel Calcula Distâncias: %g segundos\n\n", (fim_calc_distancias - inicio_calc_distancias) / (float) CLOCKS_PER_SEC);
+		float distanciasTempo = (fim_calc_distancias - inicio_calc_distancias) / (float) CLOCKS_PER_SEC;
 	
 		clock_t inicio_reducao1 = clock();
 	#endif
@@ -339,13 +339,12 @@ int main(int argc, char *argv[])
 	// Redução usando thrust para achar delta inicial do vetor de distâncias
 	thrust::device_vector<float>::iterator iter = thrust::min_element(dD.begin(), dD.end()); 
 	
+	delta_inicial = *iter;
+
 	#if DEBUG
 		clock_t fim_reducao1 = clock();
-		printf("Tempo da redução1: %g segundos\n\n", (fim_reducao1 - inicio_reducao1) / (float) CLOCKS_PER_SEC);
+		float reducao1Tempo = (fim_reducao1 - inicio_reducao1) / (float) CLOCKS_PER_SEC;	
 	#endif
-
-	delta_inicial = *iter;
-	printf("\n\nDelta Inicial: %lf\n\n", delta_inicial);	
 
 /*-----------------------------------------------------------------------------------------------------------------*/
 /*-----------------------------------------------------------------------------------------------------------------*/
@@ -367,23 +366,34 @@ int main(int argc, char *argv[])
 
 	#if DEBUG
 		clock_t fim_forca_bruta = clock();
-		printf("Tempo do kernel Força Bruta: %g segundos\n\n", (fim_forca_bruta - inicio_forca_bruta) / (float) CLOCKS_PER_SEC);
+		float forcaBrutaTempo = (fim_forca_bruta - inicio_forca_bruta) / (float) CLOCKS_PER_SEC;
 
 		clock_t inicio_reducao2 = clock();
 	#endif
 	// Redução do vetor dMin
 	thrust::device_vector<float>::iterator iter2 = thrust::min_element(dMin.begin(), dMin.end());
 	
+	delta_minimo = *iter2;
+
 	#if DEBUG
 		clock_t fim_reducao2 = clock();
-		printf("Tempo da redução2: %g segundos\n\n", (fim_reducao2 - inicio_reducao2) / (float) CLOCKS_PER_SEC);
+		float reducao2Tempo = (fim_reducao2 - inicio_reducao2) / (float) CLOCKS_PER_SEC;
 	#endif
 
-	delta_minimo = *iter2;
-	printf("Delta mínimo:\n%lf\n", delta_minimo);
+/*-----------------------------------------------------------------------------------------------------------------*/	
+/*-----------------------------------------------------------------------------------------------------------------*/
+	//Imprimindo resultados
 
 	clock_t fim = clock();
-	printf("Tempo total: %g segundos\n\n", (fim - inicio) / (float) CLOCKS_PER_SEC);
+	float tempoTotal = (fim - inicio) / (float) CLOCKS_PER_SEC;
+	
+	#if DEBUG
+		printf("%.5f      %.5f          %.5f            %.5f            %.5f        %.5f       %.5f               %.5f       %lf      %lf\n", 
+			leituraTempo, transfTempo, ordenacaoTempo, distanciasTempo, reducao1Tempo, forcaBrutaTempo, reducao2Tempo, tempoTotal, 
+			delta_inicial, delta_minimo);
+	#else
+		printf("   %.5f\n", tempoTotal);
+	#endif
 
 	#if GRAFICO
 		geraDados(fim-inicio, num_pontos);
