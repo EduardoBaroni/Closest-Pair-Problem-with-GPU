@@ -384,10 +384,10 @@ int main(int argc, char *argv[])
 	#endif
 	// Redução do vetor dMin
 	thrust::device_vector<float>::iterator iter2 = thrust::min_element(dMin.begin(), dMin.end());
-	
-	delta_minimo = *iter2;
 
 	#if DEBUG
+		delta_minimo = *iter2;
+		
 		clock_t fim_reducao2 = clock();
 		float reducao2Tempo = (fim_reducao2 - inicio_reducao2) / (float) CLOCKS_PER_SEC;
 	#endif
