@@ -336,7 +336,7 @@ int main(int argc, char *argv[])
 		float delta_minimo = *iter2;
 
 		clock_t fim_reducao2 = clock();
-		printf("Tempo da redução2: %g segundos\n\n", (fim_reducao2 - inicio_reducao2) / (float) CLOCKS_PER_SEC);
+		float reducao2Tempo = (fim_reducao2 - inicio_reducao2) / (float) CLOCKS_PER_SEC;
 	#endif
 
 /*-----------------------------------------------------------------------------------------------------------------*/	
