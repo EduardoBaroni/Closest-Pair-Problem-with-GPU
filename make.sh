@@ -37,16 +37,16 @@ for (( i = 0; 5 > i; i++)); do
 	./paralelo28 nPontos.bin coordenadas.bin >> paralelo28.txt
 done
 for (( i = 0; 5 > i; i++)); do
-	./paralelo29 nPontos.bin coordenadas.bin >> paralelo28.txt
+	./paralelo29 nPontos.bin coordenadas.bin >> paralelo29.txt
 done
 for (( i = 0; 5 > i; i++)); do
-	./paralelo30 nPontos.bin coordenadas.bin >> paralelo28.txt
+	./paralelo30 nPontos.bin coordenadas.bin >> paralelo30.txt
 done
 for (( i = 0; 5 > i; i++)); do
-	./paralelo31 nPontos.bin coordenadas.bin >> paralelo28.txt
+	./paralelo31 nPontos.bin coordenadas.bin >> paralelo31.txt
 done
 for (( i = 0; 5 > i; i++)); do
-	./paralelo32 nPontos.bin coordenadas.bin >> paralelo28.txt
+	./paralelo32 nPontos.bin coordenadas.bin >> paralelo32.txt
 done
 
 echo "Execução finalizada"
