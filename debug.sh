@@ -1,7 +1,5 @@
 #!/bin/bash
 
-#Variáveis da aplicação
-
 echo "Compilando..."
 gcc gerador_bin_v5.c -pedantic -std=c11 -o gerador
 gcc cpp_seq_v7.c -pedantic -std=c11 -O3 -o seq_7 -lm -DDEBUG
@@ -29,6 +27,7 @@ echo "Leitura | Transferência |  Ordenação  | Calcula Delta Incial | Reduçã
 echo "Leitura | Transferência |  Ordenação  | Calcula Delta Incial | Redução 1 |  Força Bruta  | Redução 2 |   TOTAL   || Delta Inicial | 
 	  Delta Minimo |" > paralelo32.txt	  
 
+echo "Executando..."
 for (( i = 0; 6 > i; i++)); do
 	./seq_7 nPontos.bin coordenadas.bin >> seq7.txt			
 done
@@ -53,5 +52,4 @@ done
 for (( i = 0; 6 > i; i++)); do
 	./paralelo32 nPontos.bin coordenadas.bin >> paralelo32.txt			
 done
-
 echo "Execução finalizada"
