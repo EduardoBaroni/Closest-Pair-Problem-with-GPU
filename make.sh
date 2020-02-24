@@ -16,6 +16,7 @@ echo "Compilação finalizada"
 echo "!   TOTAL   !" > seq7.txt
 echo "!   TOTAL   !" > seq8.txt
 echo "!   TOTAL   !" > seq9.txt
+echo "|   TOTAL   |" > sed6.txt
 
 echo "!   TOTAL   !" > paralelo28.txt
 echo "!   TOTAL   !" > paralelo29.txt
@@ -34,7 +35,7 @@ for (( i = 0; 6 > i; i++)); do
 	./seq_9 nPontos.bin coordenadas.bin >> seq9.txt			
 done
 for (( i = 0; 6 > i; i++)); do
-	./sed6 nPontos.bin coordenadas.bin >> seq9.txt			
+	./sed6 nPontos.bin coordenadas.bin >> sed6.txt			
 done
 for (( i = 0; 6 > i; i++)); do
 	./paralelo28 nPontos.bin coordenadas.bin >> paralelo28.txt
