@@ -48,3 +48,7 @@ for (( i = 0; 6 > i; i++)); do
 	./paralelo32 nPontos.bin coordenadas.bin >> paralelo32.txt			
 done
 echo "Execução finalizada"
+
+echo "Gerando médias"
+
+python3 gera_medias.py > medias.txt
