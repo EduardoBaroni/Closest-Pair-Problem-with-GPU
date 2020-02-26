@@ -277,7 +277,7 @@ float Forca_Bruta(int num_pontos, int num_regioes, int ptsRegiao, float delta_in
 	}
 
 	#if DEBUG
-		printf("%ld       ", cont);
+		printf("%10ld       ", cont);
 	#endif
 
 	return delta_minimo;
