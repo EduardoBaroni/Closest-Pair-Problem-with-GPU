@@ -23,27 +23,35 @@ echo "Leitura | Transferência |  Ordenação  | Calcula Delta Incial | Reduçã
 echo "Leitura | Transferência |  Ordenação  | Calcula Delta Incial | Redução 1 |  Força Bruta  | Redução 2 |   TOTAL   || Delta Inicial | Delta Minimo |" > paralelo32.txt	  
 
 echo "Executando..."
+echo "Executando seq7"
 for (( i = 0; 6 > i; i++)); do
 	./seq_7 nPontos.bin coordenadas.bin >> seq7.txt			
 done
+echo "Executando seq8"
 for (( i = 0; 6 > i; i++)); do
 	./seq_8 nPontos.bin coordenadas.bin >> seq8.txt			
 done
+echo "Executando seq9"
 for (( i = 0; 6 > i; i++)); do
 	./seq_9 nPontos.bin coordenadas.bin >> seq9.txt			
 done
+echo "Executando paralelo28"
 for (( i = 0; 6 > i; i++)); do
 	./paralelo28 nPontos.bin coordenadas.bin >> paralelo28.txt			
 done
+echo "Executando paralelo29"
 for (( i = 0; 6 > i; i++)); do
 	./paralelo29 nPontos.bin coordenadas.bin >> paralelo29.txt			
 done
+echo "Executando paralelo30"
 for (( i = 0; 6 > i; i++)); do
 	./paralelo30 nPontos.bin coordenadas.bin >> paralelo30.txt			
 done
+echo "Executando paralelo31"
 for (( i = 0; 6 > i; i++)); do
 	./paralelo31 nPontos.bin coordenadas.bin >> paralelo31.txt			
 done
+echo "Executando paralelo32"
 for (( i = 0; 6 > i; i++)); do
 	./paralelo32 nPontos.bin coordenadas.bin >> paralelo32.txt			
 done
