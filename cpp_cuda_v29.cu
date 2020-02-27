@@ -22,8 +22,6 @@
 #include <fstream>
 #include <iterator>
 
-#include <cuda_profiler_api.h>
-
 
 // Kernels
 
@@ -317,14 +315,10 @@ int main(int argc, char *argv[])
 		clock_t inicio_forca_bruta = clock();
 	#endif
 
-	cudaProfilerStart();
-
 	Forca_Bruta<<<num_regioes, ptsRegiao>>>(num_pontos, num_regioes, ptsRegiao, X, Y, Min, delta_inicial);
 	
 	cudaDeviceSynchronize();
 
-	cudaProfilerStop(); 
-	
 	#if DEBUG
 		clock_t fim_forca_bruta = clock();
 		float forcaBrutaTempo = (fim_forca_bruta - inicio_forca_bruta) / (float) CLOCKS_PER_SEC;
