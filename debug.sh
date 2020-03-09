@@ -1,73 +1,59 @@
-#!/bin/bash
+def gera_medias_paralelo_debug(arquivo):
+	file = open(arquivo).readlines()
+	file.pop(0)
 
-echo "Compilando..."
-gcc gerador_bin_v5.c -pedantic -std=c11 -o gerador
-gcc cpp_seq_v7.c -pedantic -std=c11 -O3 -o seq_7 -lm -DDEBUG
-gcc cpp_seq_v8.c -pedantic -std=c11 -O3 -o seq_8 -lm -DDEBUG
-gcc cpp_seq_v9.c -pedantic -std=c11 -O3 -o seq_9 -lm -DDEBUG
-gcc sed6_quick.c -pedantic -std=c11 -O3 -o sed6 -lm
-nvcc cpp_cuda_v28.cu -O3 -o paralelo28 -DDEBUG
-nvcc cpp_cuda_v29.cu -O3 -o paralelo29 -DDEBUG
-nvcc cpp_cuda_v30.cu -O3 -o paralelo30 -DDEBUG
-nvcc cpp_cuda_v31.cu -O3 -o paralelo31 -DDEBUG
-nvcc cpp_cuda_v32.cu -O3 -o paralelo32 -DDEBUG
-echo "Compilação finalizada"
+	valores = [0,0,0,0,0,0,0,0]
 
-echo "Comparações | Leitura |  Ordenação  | Calcula Delta Incial |  Força Bruta  |   TOTAL   || Delta Inicial | Delta Minimo |" > seq7.txt
-echo "Comparações | Leitura |  Ordenação  | Calcula Delta Incial |  Força Bruta  |   TOTAL   || Delta Inicial | Delta Minimo |" > seq8.txt
-echo "Comparações | Leitura |  Ordenação  | Calcula Delta Incial |  Força Bruta  |   TOTAL   || Delta Inicial | Delta Minimo |" > seq9.txt
+	#for line in file:
+	#	print(line)
+	
+	i = 0
+	for line in file:
+		if( i != 0):
+			valores[0] += float(line[0:7])/5
+			valores[1] += float(line[13:20])/5
+			valores[2] += float(line[30:37])/5
+			valores[3] += float(line[49:56])/5
+			valores[4] += float(line[64:72])/5
+			valores[5] += float(line[79:87])/5
+			valores[6] += float(line[93:101])/5
+			valores[7] += float(line[104:112])/5
+		i+=1
 
-echo "Leitura | Transferência |  Ordenação  | Calcula Delta Incial | Redução 1 |  Força Bruta  | Redução 2 |   TOTAL   || Delta Inicial | Delta Minimo |" > paralelo28.txt
-echo "Leitura | Transferência |  Ordenação  | Calcula Delta Incial | Redução 1 |  Força Bruta  | Redução 2 |   TOTAL   || Delta Inicial | Delta Minimo |" > paralelo29.txt
-echo "Leitura | Transferência |  Ordenação  | Calcula Delta Incial | Redução 1 |  Força Bruta  | Redução 2 |   TOTAL   || Delta Inicial | Delta Minimo |" > paralelo30.txt
-echo "Leitura | Transferência |  Ordenação  | Calcula Delta Incial | Redução 1 |  Força Bruta  | Redução 2 |   TOTAL   || Delta Inicial | Delta Minimo |" > paralelo31.txt
-echo "Leitura | Transferência |  Ordenação  | Calcula Delta Incial | Redução 1 |  Força Bruta  | Redução 2 |   TOTAL   || Delta Inicial | Delta Minimo |" > paralelo32.txt	  
+	print(arquivo, end = ': ')
+	for e in valores:
+		print('%.5f seg'%e, end = ' ')
+	print('\n')
 
-echo "TOTAL" > sed6.txt
+def gera_medias_sequencial_debug(arquivo):
+	file = open(arquivo).readlines()
+	file.pop(0)
 
-echo "Executando..."
-echo "Executando seq7"
-for (( i = 0; 5 > i; i++)); do
-	./seq_7 nPontos.bin coordenadas.bin >> seq7.txt			
-	echo "#"
-done
-echo "Executando seq8"
-for (( i = 0; 5 > i; i++)); do
-	./seq_8 nPontos.bin coordenadas.bin >> seq8.txt		
-	echo "#"	
-done
-echo "Executando seq9"
-for (( i = 0; 5 > i; i++)); do
-	./seq_9 nPontos.bin coordenadas.bin >> seq9.txt	
-	echo "#"		
-done
-echo "Executando sed6"
-for (( i = 0; 5 > i; i++)); do
-	./sed6 nPontos.bin coordenadas.bin >> sed6.txt	
-	echo "#"		
-done
-echo "Executando paralelo28"
-for (( i = 0; 6 > i; i++)); do
-	./paralelo28 nPontos.bin coordenadas.bin >> paralelo28.txt			
-done
-echo "Executando paralelo29"
-for (( i = 0; 6 > i; i++)); do
-	./paralelo29 nPontos.bin coordenadas.bin >> paralelo29.txt			
-done
-echo "Executando paralelo30"
-for (( i = 0; 6 > i; i++)); do
-	./paralelo30 nPontos.bin coordenadas.bin >> paralelo30.txt			
-done
-echo "Executando paralelo31"
-for (( i = 0; 6 > i; i++)); do
-	./paralelo31 nPontos.bin coordenadas.bin >> paralelo31.txt			
-done
-echo "Executando paralelo32"
-for (( i = 0; 6 > i; i++)); do
-	./paralelo32 nPontos.bin coordenadas.bin >> paralelo32.txt			
-done
-echo "Execução finalizada"
+	valores = [0,0,0,0,0,0]
 
-echo "Gerando médias"
+	#for line in file:
+	#	print(line)
+	
+	for line in file:
+			valores[0] += float(line[0:10])/5
+			valores[1] += float(line[17:25])/5
+			valores[2] += float(line[28:39])/5
+			valores[3] += float(line[50:60])/5
+			valores[4] += float(line[68:80])/5
+			valores[5] += float(line[82:95])/5
 
-python3 gera_medias.py > medias.txt
+	print(arquivo, end = ': ')
+	for e in valores:
+		print('%.5f seg'%e, end = ' ')
+	print('\n')
+	
+if __name__ == '__main__':
+	gera_medias_paralelo_debug("paralelo28.txt")
+	gera_medias_paralelo_debug("paralelo29.txt")
+	gera_medias_paralelo_debug("paralelo30.txt")
+	gera_medias_paralelo_debug("paralelo31.txt")
+	gera_medias_paralelo_debug("paralelo32.txt")
+
+	gera_medias_sequencial_debug("seq7.txt")
+	gera_medias_sequencial_debug("seq8.txt")
+	gera_medias_sequencial_debug("seq9.txt")
