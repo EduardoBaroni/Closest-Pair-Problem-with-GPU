@@ -1,4 +1,4 @@
-﻿/* 
+/* 
 	Este programa trata do problema de se achar os pares de pontos mais próximos num plano xy. 
 	Aqui se utiliza a plataforma CUDA a fim de verificar possíveis soluções eficientes.
 */
@@ -400,7 +400,7 @@ int main(int argc, char *argv[])
 	float tempoTotal = (fim - inicio) / (float) CLOCKS_PER_SEC;
 	
 	#if DEBUG
-		printf("%.5f      %.5f          %.5f            %.5f        %.5f        %.5f       %.5f    %.5f       %lf      %lf\n", 
+		printf("%.5f  :   %.5f     :    %.5f       :    %.5f    :   %.5f    :   %.5f    :  %.5f :  %.5f    :  %lf   :  %lf\n", 
 			leituraTempo, transfTempo, ordenacaoTempo, distanciasTempo, reducao1Tempo, forcaBrutaTempo, reducao2Tempo, tempoTotal, 
 			delta_inicial, delta_minimo);
 	#else
