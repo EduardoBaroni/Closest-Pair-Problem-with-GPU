@@ -35,12 +35,12 @@ def gera_medias_sequencial_debug(arquivo):
 	#	print(line)
 	
 	for line in file:
-			valores[0] += float(line[0:10])/6
-			valores[1] += float(line[17:25])/6
-			valores[2] += float(line[28:39])/6
-			valores[3] += float(line[50:60])/6
-			valores[4] += float(line[68:80])/6
-			valores[5] += float(line[82:95])/6
+			valores[0] += float(line[0:10])/5
+			valores[1] += float(line[17:25])/5
+			valores[2] += float(line[28:39])/5
+			valores[3] += float(line[50:60])/5
+			valores[4] += float(line[68:80])/5
+			valores[5] += float(line[82:95])/5
 
 	print(arquivo, end = ': ')
 	for e in valores:
