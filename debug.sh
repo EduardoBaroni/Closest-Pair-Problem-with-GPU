@@ -5,6 +5,7 @@ gcc gerador_bin_v5.c -pedantic -std=c11 -o gerador
 gcc cpp_seq_v7.c -pedantic -std=c11 -O3 -o seq_7 -lm -DDEBUG
 gcc cpp_seq_v8.c -pedantic -std=c11 -O3 -o seq_8 -lm -DDEBUG
 gcc cpp_seq_v9.c -pedantic -std=c11 -O3 -o seq_9 -lm -DDEBUG
+gcc sed6_quick.c -pedantic -std=c11 -O3 -o sed6 -lm
 nvcc cpp_cuda_v28.cu -O3 -o paralelo28 -DDEBUG
 nvcc cpp_cuda_v29.cu -O3 -o paralelo29 -DDEBUG
 nvcc cpp_cuda_v30.cu -O3 -o paralelo30 -DDEBUG
@@ -22,18 +23,28 @@ echo "Leitura | Transferência |  Ordenação  | Calcula Delta Incial | Reduçã
 echo "Leitura | Transferência |  Ordenação  | Calcula Delta Incial | Redução 1 |  Força Bruta  | Redução 2 |   TOTAL   || Delta Inicial | Delta Minimo |" > paralelo31.txt
 echo "Leitura | Transferência |  Ordenação  | Calcula Delta Incial | Redução 1 |  Força Bruta  | Redução 2 |   TOTAL   || Delta Inicial | Delta Minimo |" > paralelo32.txt	  
 
+echo "TOTAL" > sed6.txt
+
 echo "Executando..."
 echo "Executando seq7"
-for (( i = 0; 6 > i; i++)); do
+for (( i = 0; 5 > i; i++)); do
 	./seq_7 nPontos.bin coordenadas.bin >> seq7.txt			
+	echo "#"
 done
 echo "Executando seq8"
-for (( i = 0; 6 > i; i++)); do
-	./seq_8 nPontos.bin coordenadas.bin >> seq8.txt			
+for (( i = 0; 5 > i; i++)); do
+	./seq_8 nPontos.bin coordenadas.bin >> seq8.txt		
+	echo "#"	
 done
 echo "Executando seq9"
-for (( i = 0; 6 > i; i++)); do
-	./seq_9 nPontos.bin coordenadas.bin >> seq9.txt			
+for (( i = 0; 5 > i; i++)); do
+	./seq_9 nPontos.bin coordenadas.bin >> seq9.txt	
+	echo "#"		
+done
+echo "Executando sed6"
+for (( i = 0; 5 > i; i++)); do
+	./sed6 nPontos.bin coordenadas.bin >> sed6.txt	
+	echo "#"		
 done
 echo "Executando paralelo28"
 for (( i = 0; 6 > i; i++)); do
