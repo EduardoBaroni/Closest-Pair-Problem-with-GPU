@@ -1,5 +1,10 @@
 #!/bin/bash
 
+DIR_RESULTS=$1
+
+echo "Directory created for results: $DIR_RESULTS"
+mkdir $DIR_RESULTS
+
 echo "Compilando..."
 gcc gerador_bin_v5.c -pedantic -std=c11 -o gerador
 gcc cpp_seq_v7.c -pedantic -std=c11 -O3 -o seq_7 -lm -DDEBUG
@@ -76,3 +81,32 @@ echo "Execução finalizada"
 echo "Gerando médias"
 
 python3 gera_medias.py > medias.txt
+
+mv *.txt $DIR_RESULTS/
+echo "All files results are moved to directory: $DIR_RESULTS"
+
+sudo /usr/local/cuda-10.0/NsightCompute-1.0/nv-nsight-cu-cli -k "calculaDistancias|Forca_Bruta" -f ./paralelo28 nPontos.bin coordenadas.bin > profile_kernels28.txt
+sudo /usr/local/cuda-10.0/NsightCompute-1.0/nv-nsight-cu-cli -k "calculaDistancias|Forca_Bruta" -f ./paralelo29 nPontos.bin coordenadas.bin > profile_kernels29.txt
+sudo /usr/local/cuda-10.0/NsightCompute-1.0/nv-nsight-cu-cli -k "calculaDistancias|Forca_Bruta" -f ./paralelo30 nPontos.bin coordenadas.bin > profile_kernels30.txt
+sudo /usr/local/cuda-10.0/NsightCompute-1.0/nv-nsight-cu-cli -k "calculaDistancias|Forca_Bruta" -f ./paralelo31 nPontos.bin coordenadas.bin > profile_kernels31.txt
+sudo /usr/local/cuda-10.0/NsightCompute-1.0/nv-nsight-cu-cli -k "calculaDistancias|Forca_Bruta" -f ./paralelo32 nPontos.bin coordenadas.bin > profile_kernels32.txt
+
+mv *.txt $DIR_RESULTS/
+echo "All profiles results are moved to directory: $DIR_RESULTS"
+
+/usr/bin/time -f "%M" -o Memory_File_seq7.txt ./seq_7 nPontos.bin coordenadas.bin
+/usr/bin/time -f "%M" -o Memory_File_seq8.txt ./seq_8 nPontos.bin coordenadas.bin
+/usr/bin/time -f "%M" -o Memory_File_seq9.txt ./seq_9 nPontos.bin coordenadas.bin
+/usr/bin/time -f "%M" -o Memory_File_sed6.txt ./sed6 nPontos.bin coordenadas.bin
+
+mv *.txt $DIR_RESULTS/
+echo "All times CPU results are moved to directory: $DIR_RESULTS"
+
+/usr/bin/time -f "%M" -o Memory_File_p28.txt ./paralelo28 nPontos.bin coordenadas.bin
+/usr/bin/time -f "%M" -o Memory_File_p29.txt ./paralelo29 nPontos.bin coordenadas.bin
+/usr/bin/time -f "%M" -o Memory_File_p30.txt ./paralelo30 nPontos.bin coordenadas.bin
+/usr/bin/time -f "%M" -o Memory_File_p31.txt ./paralelo31 nPontos.bin coordenadas.bin
+/usr/bin/time -f "%M" -o Memory_File_p32.txt ./paralelo32 nPontos.bin coordenadas.bin
+
+mv *.txt $DIR_RESULTS/
+echo "All times GPU results are moved to directory: $DIR_RESULTS"
