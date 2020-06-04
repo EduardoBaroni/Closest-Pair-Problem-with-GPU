@@ -7,7 +7,7 @@ mkdir $DIR_RESULTS
 
 echo "Compilando..."
 gcc gerador_3D.c -pedantic -std=c11 -o gerador
-gcc cpp_seq_3d.c -pedantic -std=c11 -O3 -o seq_3D -lm -DDEBUG
+gcc cpp_seq_3d.c -pedantic -std=c11 -O3 -o seq_3D -lm -DDEBUG -DCONTADOR
 nvcc cpp_cuda_3D.cu -O3 -o paralelo3D -DDEBUG
 
 echo "Compilação finalizada"
@@ -43,7 +43,7 @@ echo "All profiles results are moved to directory: $DIR_RESULTS"
 mv *.txt $DIR_RESULTS/
 echo "All times CPU results are moved to directory: $DIR_RESULTS"
 
-/usr/bin/time -f "%M" -o Memory_File_p3D.txt ./paralelo3D nPontos.bin coordenadas.bin
+/usr/bin/time -f "%M" -o Memory_File_p28.txt ./paralelo3D nPontos.bin coordenadas.bin
 
 mv *.txt $DIR_RESULTS/
 echo "All times GPU results are moved to directory: $DIR_RESULTS"
