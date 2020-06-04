@@ -210,7 +210,7 @@ float Forca_Bruta(int num_pontos, int num_regioes, int ptsRegiao, float delta_in
 			for( int k=j+1 ; X[k]<=lim_final && k<num_pontos ; k++ ){
 
 				// OTIMIZAÇÃO: Olhar a coordenada x
-				if(X[k]-X[j]>(int)delta_minimo ){
+				if( X[k]-X[j]>(int)delta_minimo ){
 					k = num_pontos;
 				}
 				else if( X[j]!=X[k] || Y[j]!=Y[k] || Z[j]!=Z[k] ) // se não forem pontos coincidentes faça
@@ -230,7 +230,6 @@ float Forca_Bruta(int num_pontos, int num_regioes, int ptsRegiao, float delta_in
 						delta_minimo = aux;
 						lim_final = x_final + (int) delta_minimo;
 					}
-					
 				}
 			}
 		}
@@ -240,28 +239,25 @@ float Forca_Bruta(int num_pontos, int num_regioes, int ptsRegiao, float delta_in
 	
 		for( int k=j+1 ; k<num_pontos ; k++ ){
 
-			if( X[j]!=X[k] || Y[j]!=Y[k] || Z[j]!=Z[k] ) // se não forem pontos coincidentes faça
-			{
-				#if CONTADOR
+			// OTIMIZAÇÃO: Olhar a coordenada x
+			if( X[k]-X[j]>(int)delta_minimo ){
+				k = num_pontos;
+			}
+			else if( X[j]!=X[k] || Y[j]!=Y[k] || Z[j]!=Z[k] ){
+
+				#if DEBUG
 					cont++;
 				#endif
 
-				// OTIMIZAÇÃO: Olhar a coordenada x
-				if(X[k]-X[j]>(int)delta_minimo ){
-					k = num_pontos;
+				A = (long int) ( (long int)(X[j]-X[k])*(long int)(X[j]-X[k]) );
+				B = (long int) ( (long int)(Y[j]-Y[k])*(long int)(Y[j]-Y[k]) );
+				C = (long int) ( (long int)(Z[j]-Z[k])*(long int)(Z[j]-Z[k]) );
+	
+				aux = (float) sqrt( A + B + C );
+
+				if( aux < delta_minimo ){
+					delta_minimo = aux;
 				}
-				else if( X[j]!=X[k] || Y[j]!=Y[k] ){
-
-					A = (long int) ( (long int)(X[j]-X[k])*(long int)(X[j]-X[k]) );
-					B = (long int) ( (long int)(Y[j]-Y[k])*(long int)(Y[j]-Y[k]) );
-					C = (long int) ( (long int)(Z[j]-Z[k])*(long int)(Z[j]-Z[k]) );
-		
-					aux = (float) sqrt( A + B + C );
-
-					if( aux < delta_minimo )
-						delta_minimo = aux;
-				}
-
 			}
 		}
 	}
