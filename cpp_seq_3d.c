@@ -242,7 +242,7 @@ float Forca_Bruta(int num_pontos, int num_regioes, int ptsRegiao, float delta_in
 
 			if( X[j]!=X[k] || Y[j]!=Y[k] || Z[j]!=Z[k] ) // se não forem pontos coincidentes faça
 			{
-				#if DEBUG
+				#if CONTADOR
 					cont++;
 				#endif
 
