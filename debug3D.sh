@@ -43,7 +43,7 @@ echo "All profiles results are moved to directory: $DIR_RESULTS"
 mv *.txt $DIR_RESULTS/
 echo "All times CPU results are moved to directory: $DIR_RESULTS"
 
-/usr/bin/time -f "%M" -o Memory_File_p28.txt ./paralelo3D nPontos.bin coordenadas.bin
+/usr/bin/time -f "%M" -o Memory_File_p3D.txt ./paralelo3D nPontos.bin coordenadas.bin
 
 mv *.txt $DIR_RESULTS/
 echo "All times GPU results are moved to directory: $DIR_RESULTS"
