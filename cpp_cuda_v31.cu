@@ -22,7 +22,6 @@
 #include <fstream>
 #include <iterator>
 
-
 // Kernels
 
 __global__ void calculaDistancias(unsigned int num_pontos, int *X, int *Y, float *dD)
@@ -78,7 +77,7 @@ __global__ void Forca_Bruta(int num_pontos, int num_regioes, int ptsRegiao, int 
 	int k; // auxiliar
 	float aux, delta_minimo = delta_inicial;
 	long int A,B;
-	int LimFinal;
+	int LimFinal, x_final;
 	int xi, xk, yi, yk;
 	bool continua;
 	__shared__ int Xs[32], Ys[32];
@@ -86,7 +85,7 @@ __global__ void Forca_Bruta(int num_pontos, int num_regioes, int ptsRegiao, int 
 	// Cópia
 	Xs[idl] = X[idg];
 	Ys[idl] = Y[idg];
-   __syncthreads();
+   	__syncthreads();
 	// Fim cópia
 
 	xi = Xs[idl];
@@ -94,18 +93,19 @@ __global__ void Forca_Bruta(int num_pontos, int num_regioes, int ptsRegiao, int 
 
 	if( idb < num_regioes-1 )// Todos as regioes menos a última são tratadas igualmente.
 	{ 
-		continua = true;
-
-		// Calculo do limite final da região
-		LimFinal = X[ptsRegiao * (idb+1) - 1] + (int) delta_inicial;
-		
+		continua = true ;
 		// for com uso de índices locais para threads
 		for( k=idl+1 ; k<ptsRegiao ; k++ ){ // cada thread executará esse laço.
 
 			xk = Xs[k];
 			yk = Ys[k];
 
-			if( xi!=xk || yi!=yk ){
+			// OTIMIZAÇÃO: Olhar a coordenada x
+			if(xk-xi>(int)delta_minimo ){
+				k = num_pontos;
+				continua = false;
+			}
+			else if( xi!=xk || yi!=yk ){
 
 				A = (long int) ( (long int)(xi-xk)*(long int)(xi-xk) );
 			
@@ -119,13 +119,21 @@ __global__ void Forca_Bruta(int num_pontos, int num_regioes, int ptsRegiao, int 
 			}
 		}
 
+		// Calculo do limite final da região
+		x_final = X[ptsRegiao*(idb+1)-1];
+		LimFinal = x_final + (int) delta_minimo;
+
 		// for com uso de índices globais para threads
 		for( k=ptsRegiao*(idb+1) ; continua && X[k]<=LimFinal && k<num_pontos ; k++ ){ // cada thread executará esse laço.
 
 			xk = X[k];
 			yk = Y[k];
 
-			if( xi!=xk || yi!=yk ){
+			// OTIMIZAÇÃO: Olhar a coordenada x
+			if(xk-xi>(int)delta_minimo ){
+				k = num_pontos;
+			}
+			else if( xi!=xk || yi!=yk ){
 
 				A = (long int) ( (long int)(xi-xk)*(long int)(xi-xk) );
 			
@@ -135,6 +143,7 @@ __global__ void Forca_Bruta(int num_pontos, int num_regioes, int ptsRegiao, int 
 
 				if( aux < delta_minimo ){
 					delta_minimo = aux;
+					LimFinal = x_final + (int) delta_minimo;
 				}
 			}
 		}
@@ -149,7 +158,11 @@ __global__ void Forca_Bruta(int num_pontos, int num_regioes, int ptsRegiao, int 
 				xk = Xs[k];
 				yk = Ys[k];
 
-				if( xi!=xk || yi!=yk ){
+				// OTIMIZAÇÃO: Olhar a coordenada x
+				if(xk-xi>(int)delta_minimo ){
+					k = num_pontos;
+				}
+				else if( xi!=xk || yi!=yk ){
 
 					A = (long int) ( (long int)(xi-xk)*(long int)(xi-xk) );
 				
@@ -170,7 +183,7 @@ __global__ void Forca_Bruta(int num_pontos, int num_regioes, int ptsRegiao, int 
 /*-----------------------------------------------------------------------------------------------------------------*/
 
 // Funções
-void leitura(char *argv[], unsigned int *num_pontos, thrust::host_vector<int>& hX, thrust::host_vector<int>& hY)
+void leitura(char *argv[], unsigned int *num_pontos, thrust::host_vector<int> &hX, thrust::host_vector<int> &hY)
 
 {
 	std::ifstream pts(argv[1], std::ios::binary);
@@ -189,7 +202,6 @@ void leitura(char *argv[], unsigned int *num_pontos, thrust::host_vector<int>& h
  		// Entao as coordenadas são lidas
 		file.read((char*)(hX.data()), hX.size()*sizeof(int));
 		file.read((char*)(hY.data()), hY.size()*sizeof(int));
-
 	}
 
 	pts.close();
@@ -206,7 +218,7 @@ int calculaRegioes(unsigned int num_pontos, unsigned int ptsRegiao)
 	num_regioes = num_pontos / ptsRegiao;	
 	
 	if( num_pontos % ptsRegiao != 0 )
-		num_regioes += 1;
+		num_regioes ++;
 	
 	return num_regioes;
 }
@@ -372,10 +384,10 @@ int main(int argc, char *argv[])
 	#endif
 	// Redução do vetor dMin
 	thrust::device_vector<float>::iterator iter2 = thrust::min_element(dMin.begin(), dMin.end());
-	
+
 	#if DEBUG
 		float delta_minimo = *iter2;
-
+		
 		clock_t fim_reducao2 = clock();
 		float reducao2Tempo = (fim_reducao2 - inicio_reducao2) / (float) CLOCKS_PER_SEC;
 	#endif
@@ -394,7 +406,6 @@ int main(int argc, char *argv[])
 	#else
 		printf("   %.5f\n", tempoTotal);
 	#endif
-
 	#if GRAFICO
 		geraDados(fim-inicio, num_pontos);
 	#endif
