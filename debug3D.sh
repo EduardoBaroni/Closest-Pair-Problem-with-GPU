@@ -2,48 +2,48 @@
 
 DIR_RESULTS=$1
 
-echo "Directory created for results: $DIR_RESULTS"
+echo "Diretorio criado para os resultados: $DIR_RESULTS"
 mkdir $DIR_RESULTS
 
 echo "Compilando..."
 gcc gerador_3D.c -pedantic -std=c11 -o gerador
-gcc cpp_seq_3d.c -pedantic -std=c11 -O3 -o seq_3D -lm -DDEBUG -DCONTADOR
-nvcc cpp_cuda_3D.cu -O3 -o paralelo3D -DDEBUG
-
+gcc cpp_seq_3D.c -pedantic -std=c11 -O3 -o seq_3D -lm -DDEBUG
+#nvcc cpp_cuda_3D.cu -O3 -o paralelo_3D -DDEBUG
 echo "Compilação finalizada"
 
-echo "Comparações | Leitura |  Ordenação  | Calcula Delta Incial |  Força Bruta  |   TOTAL   || Delta Inicial | Delta Minimo |" > seq3D.txt
-echo "Leitura | Transferência |  Ordenação  | Calcula Delta Incial | Redução 1 |  Força Bruta  | Redução 2 |   TOTAL   || Delta Inicial | Delta Minimo |" > paralelo3D.txt
+echo "Informe os limites min e max em X:"
+read minX
+read maxX
+echo "Informe os limites min e max em Y:"
+read minY
+read maxY
+echo "Informe os limites min e max em Z:"
+read minZ
+read maxZ
+echo "Informe o número de pontos"
+read num_pontos
 
-echo "Executando..."
-echo "Executando seq3D"
-for (( i = 0; 5 > i; i++)); do
-	./seq_3D nPontos.bin coordenadas.bin >> seq3D.txt			
-	echo "#"
+echo "Comparações | Leitura |  Ordenação  | Calcula Delta Incial |  Força Bruta  |   TOTAL   || Delta Inicial | Delta Minimo |" > seq_3D.txt
+echo "Leitura | Transferência |  Ordenação  | Calcula Delta Incial | Redução 1 |  Força Bruta  | Redução 2 |   TOTAL   || Delta Inicial | Delta Minimo |" > paralelo_3D.txt  
+
+for ((i = 0; 2 > i; i++)); do
+	echo "Executando gerador"
+	./gerador $num_pontos $minX $maxX $minY $maxY $minZ $maxZ
+
+	echo "Executando seq_3D"
+	./seq_3D nPontos.bin coordenadas.bin >> seq_3D.txt			
+	
+	#echo "Executando paralelo_3D"
+	# executa uma vez para esquentar o programa e entao joga para arquivo de saida
+	#./paralelo_3D nPontos.bin coordenadas.bin	
+	#./paralelo_3D nPontos.bin coordenadas.bin >> paralelo_3D.txt
+	
+	echo "Execução finalizada"
 done
-echo "Executando paralelo3D"
-for (( i = 0; 6 > i; i++)); do
-	./paralelo3D nPontos.bin coordenadas.bin >> paralelo3D.txt	
-	echo "#"		
-done
 
-echo "Execução finalizada"
+#echo "Gerando médias"
 
+#python3 gera_medias.py > medias.txt
+
+echo "Movendo todos resultados para o diretorio: $DIR_RESULTS"
 mv *.txt $DIR_RESULTS/
-echo "All files results are moved to directory: $DIR_RESULTS"
-
-sudo /usr/local/cuda-10.0/NsightCompute-1.0/nv-nsight-cu-cli -k "calculaDistancias|Forca_Bruta" -f ./paralelo3D nPontos.bin coordenadas.bin > profile_kernels3D.txt
-
-mv *.txt $DIR_RESULTS/
-echo "All profiles results are moved to directory: $DIR_RESULTS"
-
-/usr/bin/time -f "%M" -o Memory_File_seq3D.txt ./seq_3D nPontos.bin coordenadas.bin
-
-
-mv *.txt $DIR_RESULTS/
-echo "All times CPU results are moved to directory: $DIR_RESULTS"
-
-/usr/bin/time -f "%M" -o Memory_File_p28.txt ./paralelo3D nPontos.bin coordenadas.bin
-
-mv *.txt $DIR_RESULTS/
-echo "All times GPU results are moved to directory: $DIR_RESULTS"

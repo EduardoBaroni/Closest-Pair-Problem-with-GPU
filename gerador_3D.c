@@ -2,22 +2,20 @@
 #include <time.h>
 #include <stdlib.h>
 
-int main(void){
-	int num_pontos; // variáveis a serem lidas.
-	int minX, maxX, minY, maxY, minZ, maxZ; // Limites do intervalo dos valores
+int main(int argc, char *argv[])
+{
+	int num_pontos = atoi(argv[1]), // variáveis a serem lidas.
+		minX = atoi(argv[2]),
+		maxX = atoi(argv[3]),
+		minY = atoi(argv[4]),
+		maxY = atoi(argv[5]),
+		minZ = atoi(argv[6]),
+		maxZ = atoi(argv[7]); // Limites do intervalo dos valores
+
 	int aux;
 	FILE *saida1, *saida2; // Ponteiro que aponta para o arquivo de saída que será gerado
 
-	printf("Informe os limites min e max em X:\n");
-	scanf("%d %d", &minX, &maxX);
-	printf("Informe os limites min e max em Y:\n");
-	scanf("%d %d", &minY, &maxY);
-	printf("Informe os limites min e max em Z:\n");
-	scanf("%d %d", &minZ, &maxZ);
-	printf("Informe num_pontos:\n");
-	scanf("%d", &num_pontos); // Lendo qnt de pts aleatórios a serem gerados
-	
-	// Abrindo arquivos em modo de leitura binária 
+	// Abrindo arquivos em modo de escrita binária 
 	// Obs.: Esse modo cria o arquivo caso ele não exista :)
 	saida1 = fopen("nPontos.bin", "wb"); // Agora se chama nPontos.bin
 	saida2 = fopen("coordenadas.bin", "wb"); // Agora se chama coordenadas.bin

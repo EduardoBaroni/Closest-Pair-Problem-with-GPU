@@ -48,12 +48,6 @@ def gera_medias_sequencial_debug(arquivo):
 	print('\n')
 	
 if __name__ == '__main__':
-	gera_medias_paralelo_debug("paralelo28.txt")
-	gera_medias_paralelo_debug("paralelo29.txt")
-	gera_medias_paralelo_debug("paralelo30.txt")
-	gera_medias_paralelo_debug("paralelo31.txt")
-	gera_medias_paralelo_debug("paralelo32.txt")
+	gera_medias_paralelo_debug("paralelo_3D.txt")
 
-	gera_medias_sequencial_debug("seq7.txt")
-	gera_medias_sequencial_debug("seq8.txt")
-	gera_medias_sequencial_debug("seq9.txt")
+	gera_medias_sequencial_debug("seq_3D.txt")
