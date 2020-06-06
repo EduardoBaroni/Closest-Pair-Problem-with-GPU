@@ -3,14 +3,32 @@
 #include <stdlib.h>
 
 int main(int argc, char *argv[])
-{
-	int num_pontos = atoi(argv[1]), // variáveis a serem lidas.
-		minX = atoi(argv[2]),
-		maxX = atoi(argv[3]),
-		minY = atoi(argv[4]),
-		maxY = atoi(argv[5]),
-		minZ = atoi(argv[6]),
-		maxZ = atoi(argv[7]); // Limites do intervalo dos valores
+{	
+	#if SCRIPT_MODE
+		int num_pontos = atoi(argv[1]),
+			minX = atoi(argv[2]),
+			maxX = atoi(argv[3]),
+			minY = atoi(argv[4]),
+			maxY = atoi(argv[5]);
+		#if tresD
+			int minZ = atoi(argv[6]),
+			maxZ = atoi(argv[7]);
+		#endif
+	#else 
+		int num_pontos, minX, maxX, minY, maxY;
+
+		printf("Informe os limites min e max em X: \n");
+		scanf("%d %d", &minX, &maxX);
+		printf("Informe os limites min e max em Y:\n");
+		scanf("%d %d", &minY, &maxY);
+		#if tresD
+			int minZ, maxZ;
+			printf("Informe os limites min e max em |:\n");
+			scanf("%d %d", &minZ, &maxZ);
+		#endif
+		printf("Informe num_pontos:\n");
+		scanf("%d", &num_pontos); // Lendo qnt de pts aleatórios a serem gerados
+	#endif
 
 	int aux;
 	FILE *saida1, *saida2; // Ponteiro que aponta para o arquivo de saída que será gerado
@@ -49,15 +67,17 @@ int main(int argc, char *argv[])
 		//printf("Valor aleatório em Y: %d\n", aux);
 	}			
 
-	// E por fim em Z:
-	for(int i = 0; i < num_pontos ; i++){
-		
-		aux = minZ + ( rand() % (maxZ-minZ) );
-		fwrite(&aux , sizeof(int), 1, saida2);
+	#if tresD
+		// E por fim em Z:
+		for(int i = 0; i < num_pontos ; i++){
+			
+			aux = minZ + ( rand() % (maxZ-minZ) );
+			fwrite(&aux , sizeof(int), 1, saida2);
 
-		//printf("Valor aleatório em Z: %d\n", aux);
-	}			
-
+			//printf("Valor aleatório em Z: %d\n", aux);
+		}			
+	#endif
+	
 	fclose(saida1);
 	fclose(saida2);
 
