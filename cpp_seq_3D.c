@@ -136,7 +136,7 @@ int main(int argc, char *argv[])
 	float tempoTotal = (fim - inicio) / (float) CLOCKS_PER_SEC;
 
 	#if DEBUG
-		printf("%.5f      %.5f            %.5f            %.5f       %.5f       %lf      %lf\n", 
+		printf("%.5f      %.5f            %.5f            %4.5f       %4.5f       %lf      %lf\n", 
 			leituraTempo, ordenacaoTempo, distanciasTempo, forcaBrutaTempo, tempoTotal, delta_inicial, delta_minimo);
 	#else
 		printf("   %.5f\n", tempoTotal);

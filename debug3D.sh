@@ -35,17 +35,17 @@ for ((i = 0; 5 > i; i++)); do
 	echo "Executando seq_3D"
 	./seq_3D nPontos.bin coordenadas.bin >> seq_3D.txt			
 	
-	#echo "Executando paralelo_3D"
-	# executa uma vez para esquentar o programa e entao joga para arquivo de saida
-	#./paralelo_3D nPontos.bin coordenadas.bin	
-	#./paralelo_3D nPontos.bin coordenadas.bin >> paralelo_3D.txt
+	echo "Executando paralelo_3D"
+	# Executa uma vez para esquentar o programa e entao joga para arquivo de saida
+	./paralelo_3D nPontos.bin coordenadas.bin	
+	./paralelo_3D nPontos.bin coordenadas.bin >> paralelo_3D.txt
 	
 	echo "Execução finalizada"
 done
 
-#echo "Gerando médias"
+echo "Gerando médias"
 
-#python3 gera_medias.py > medias.txt
+python3 gera_medias.py > medias.txt
 
 echo "Movendo todos resultados para o diretorio: $DIR_RESULTS"
 mv *.txt $DIR_RESULTS/

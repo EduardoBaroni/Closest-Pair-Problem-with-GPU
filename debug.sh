@@ -42,8 +42,6 @@ echo "Informe o número de pontos"
 read num_pontos
 
 for ((i = 0; 5 > i; i++)); do
-	echo "Começando execução "$i
-
 	echo "Executando gerador"
 	./gerador $num_pontos $minX $maxX $minY $maxY
 
@@ -60,38 +58,37 @@ for ((i = 0; 5 > i; i++)); do
 	./sed6 nPontos.bin coordenadas.bin >> sed6.txt
 
 	# Todas versoes paralelas sao executadas uma vez para "esquentar" o programa e entao joga para arquivo de saida
-	#echo "Executando paralelo28"
+	echo "Executando paralelo28"
 	
-	#./paralelo28 nPontos.bin coordenadas.bin
-	#./paralelo28 nPontos.bin coordenadas.bin >> paralelo28.txt	
+	./paralelo28 nPontos.bin coordenadas.bin
+	./paralelo28 nPontos.bin coordenadas.bin >> paralelo28.txt	
 	
-	#echo "Executando paralelo29"
+	echo "Executando paralelo29"
 	
-	#./paralelo29 nPontos.bin coordenadas.bin
-	#./paralelo29 nPontos.bin coordenadas.bin >> paralelo29.txt	
+	./paralelo29 nPontos.bin coordenadas.bin
+	./paralelo29 nPontos.bin coordenadas.bin >> paralelo29.txt	
 
-	#echo "Executando paralelo30"
+	echo "Executando paralelo30"
 	
-	#./paralelo30 nPontos.bin coordenadas.bin
-	#./paralelo30 nPontos.bin coordenadas.bin >> paralelo30.txt	
+	./paralelo30 nPontos.bin coordenadas.bin
+	./paralelo30 nPontos.bin coordenadas.bin >> paralelo30.txt	
 
-	#echo "Executando paralelo31"
+	echo "Executando paralelo31"
 	
-	#./paralelo31 nPontos.bin coordenadas.bin
-	#./paralelo31 nPontos.bin coordenadas.bin >> paralelo31.txt
+	./paralelo31 nPontos.bin coordenadas.bin
+	./paralelo31 nPontos.bin coordenadas.bin >> paralelo31.txt
 
-	#echo "Executando paralelo32"
+	echo "Executando paralelo32"
 	
-	#./paralelo32 nPontos.bin coordenadas.bin
-	#./paralelo32 nPontos.bin coordenadas.bin >> paralelo32.txt
-	echo "Execução " $i " finalizada"
+	./paralelo32 nPontos.bin coordenadas.bin
+	./paralelo32 nPontos.bin coordenadas.bin >> paralelo32.txt
 done
 
 echo "Execução finalizada"
 
-#echo "Gerando médias"
+echo "Gerando médias"
 
-#python3 gera_medias.py > medias.txt
+python3 gera_medias.py > medias.txt
 
 mv *.txt $DIR_RESULTS/
 echo "Todos resultados movidos para: $DIR_RESULTS"

@@ -1,6 +1,6 @@
 def gera_medias_paralelo_debug(arquivo):
 	file = open(arquivo).readlines()
-	file.pop(0)
+	file.pop(0) # excluindo a primeira linha
 
 	valores = [0,0,0,0,0,0,0,0]
 
@@ -22,12 +22,12 @@ def gera_medias_paralelo_debug(arquivo):
 
 	print(arquivo, end = ': ')
 	for e in valores:
-		print('%.5f seg'%e, end = ' ')
+		print('%.5f seg'%e, end = ':')
 	print('\n')
 
 def gera_medias_sequencial_debug(arquivo):
 	file = open(arquivo).readlines()
-	file.pop(0)
+	file.pop(0) # excluindo a primeira linha
 
 	valores = [0,0,0,0,0,0]
 
@@ -44,7 +44,7 @@ def gera_medias_sequencial_debug(arquivo):
 
 	print(arquivo, end = ': ')
 	for e in valores:
-		print('%.5f seg'%e, end = ' ')
+		print('%.5f'%e, end = ':')
 	print('\n')
 	
 if __name__ == '__main__':
