@@ -6,9 +6,9 @@ echo "Diretorio criado para os resultados: $DIR_RESULTS"
 mkdir $DIR_RESULTS
 
 echo "Compilando..."
-gcc gerador.c -pedantic -std=c11 -o gerador -DSCRIPT_MODE -DtresD
-gcc cpp_seq_3D.c -pedantic -std=c11 -O3 -o seq_3D -lm -DDEBUG
-nvcc cpp_cuda_3D.cu -O3 -o paralelo_3D -DDEBUG
+!gcc gerador.c -pedantic -std=c11 -o gerador -DSCRIPT_MODE -DtresD
+!gcc cpp_seq_3D.c -pedantic -std=c11 -O3 -o seq_3D -lm -DDEBUG
+!nvcc cpp_cuda_3D.cu -O3 -o paralelo_3D -DDEBUG
 echo "Compilação finalizada"
 
 echo "Gerando cabeçalhos"

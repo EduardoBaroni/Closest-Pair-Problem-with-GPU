@@ -6,15 +6,15 @@ echo "Directory created for results: $DIR_RESULTS"
 mkdir $DIR_RESULTS
 
 echo "Compilando..."
-gcc gerador.c -pedantic -std=c11 -o gerador -DSCRIPT_MODE
-gcc cpp_seq_v7.c -pedantic -std=c11 -O3 -o seq_7 -lm -DDEBUG
-gcc cpp_seq_v8.c -pedantic -std=c11 -O3 -o seq_8 -lm -DDEBUG
-gcc cpp_seq_v9.c -pedantic -std=c11 -O3 -o seq_9 -lm -DDEBUG
-gcc sed6_quick.c -pedantic -std=c11 -O3 -o sed6 -lm
-nvcc cpp_cuda_v28.cu -O3 -o paralelo28 -DDEBUG
-nvcc cpp_cuda_v29.cu -O3 -o paralelo29 -DDEBUG
-nvcc cpp_cuda_v30.cu -O3 -o paralelo30 -DDEBUG
-nvcc cpp_cuda_v31.cu -O3 -o paralelo31 -DDEBUG
+!gcc gerador.c -pedantic -std=c11 -o gerador -DSCRIPT_MODE
+!gcc cpp_seq_v7.c -pedantic -std=c11 -O3 -o seq_7 -lm -DDEBUG
+!gcc cpp_seq_v8.c -pedantic -std=c11 -O3 -o seq_8 -lm -DDEBUG
+!gcc cpp_seq_v9.c -pedantic -std=c11 -O3 -o seq_9 -lm -DDEBUG
+!gcc sed6_quick.c -pedantic -std=c11 -O3 -o sed6 -lm
+!nvcc cpp_cuda_v28.cu -O3 -o paralelo28 -DDEBUG
+!nvcc cpp_cuda_v29.cu -O3 -o paralelo29 -DDEBUG
+!nvcc cpp_cuda_v30.cu -O3 -o paralelo30 -DDEBUG
+!nvcc cpp_cuda_v31.cu -O3 -o paralelo31 -DDEBUG
 echo "Compilação finalizada"
 
 echo "Gerando cabeçalhos"
