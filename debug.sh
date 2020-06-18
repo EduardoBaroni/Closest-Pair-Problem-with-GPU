@@ -11,11 +11,10 @@ gcc cpp_seq_v7.c -pedantic -std=c11 -O3 -o seq_7 -lm -DDEBUG
 gcc cpp_seq_v8.c -pedantic -std=c11 -O3 -o seq_8 -lm -DDEBUG
 gcc cpp_seq_v9.c -pedantic -std=c11 -O3 -o seq_9 -lm -DDEBUG
 gcc sed6_quick.c -pedantic -std=c11 -O3 -o sed6 -lm
-#nvcc cpp_cuda_v28.cu -O3 -o paralelo28 -DDEBUG
-#nvcc cpp_cuda_v29.cu -O3 -o paralelo29 -DDEBUG
-#nvcc cpp_cuda_v30.cu -O3 -o paralelo30 -DDEBUG
-#nvcc cpp_cuda_v31.cu -O3 -o paralelo31 -DDEBUG
-#nvcc cpp_cuda_v32.cu -O3 -o paralelo32 -DDEBUG
+nvcc cpp_cuda_v28.cu -O3 -o paralelo28 -DDEBUG
+nvcc cpp_cuda_v29.cu -O3 -o paralelo29 -DDEBUG
+nvcc cpp_cuda_v30.cu -O3 -o paralelo30 -DDEBUG
+nvcc cpp_cuda_v31.cu -O3 -o paralelo31 -DDEBUG
 echo "Compilação finalizada"
 
 echo "Gerando cabeçalhos"
@@ -78,10 +77,6 @@ for ((i = 0; 5 > i; i++)); do
 	./paralelo31 nPontos.bin coordenadas.bin
 	./paralelo31 nPontos.bin coordenadas.bin >> paralelo31.txt
 
-	echo "Executando paralelo32"
-	
-	./paralelo32 nPontos.bin coordenadas.bin
-	./paralelo32 nPontos.bin coordenadas.bin >> paralelo32.txt
 done
 
 echo "Execução finalizada"
