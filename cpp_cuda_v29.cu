@@ -248,7 +248,7 @@ int main(int argc, char *argv[])
 		clock_t inicio_ordenacao = clock();
 	#endif
 
-	thrust::sort_by_key(dX.begin(), dX.end(), dY.begin());
+	thrust::stable_sort_by_key(dX.begin(), dX.end(), dY.begin());
 	
 	#if DEBUG
 		clock_t fim_ordenacao = clock();
