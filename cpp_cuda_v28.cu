@@ -73,7 +73,7 @@ __global__ void Forca_Bruta(int num_pontos, int num_regioes, int ptsRegiao, int 
 
 		for( k=j+1 ; X[k]<=LimFinal && k<num_pontos ; k++ ){ // cada thread executará esse laço.
 
-			if( X[j] != X[j+1] || Y[j] != Y[j+1] ){
+			if( X[j] != X[k] || Y[j] != Y[k] ){
 
 				A = (long int) ( (long int)(X[j] - X[k]) * (long int)(X[j] - X[k]) );
 								
@@ -93,7 +93,7 @@ __global__ void Forca_Bruta(int num_pontos, int num_regioes, int ptsRegiao, int 
 
 			for( k=j+1 ;  k < num_pontos ; k++ ){ // cada thread executará esse laço.
 
-				if( X[j] != X[j+1] || Y[j] != Y[j+1] ){
+				if( X[j] != X[k] || Y[j] != Y[k] ){
 
 					A = (long int) ( (long int)(X[j] - X[k]) * (long int)(X[j] - X[k]) );
 								
