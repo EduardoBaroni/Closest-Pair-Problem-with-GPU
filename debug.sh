@@ -81,10 +81,6 @@ done
 
 echo "Execução finalizada"
 
-echo "Gerando médias"
-
-python3 gera_medias.py > medias.txt
-
 mv *.txt $DIR_RESULTS/
 echo "Todos resultados movidos para: $DIR_RESULTS"
 

@@ -43,9 +43,5 @@ for ((i = 0; 5 > i; i++)); do
 	echo "Execução finalizada"
 done
 
-echo "Gerando médias"
-
-python3 gera_medias_3D.py > medias.txt
-
 echo "Movendo todos resultados para o diretorio: $DIR_RESULTS"
 mv *.txt $DIR_RESULTS/
