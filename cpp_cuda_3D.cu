@@ -171,7 +171,7 @@ void sort_by_x(unsigned int num_pontos, thrust::device_vector<int>&dX, thrust::d
 	thrust::copy(iter, iter+num_pontos, indices_x.begin());
 
 	// Ordenamos os indíces de 0 a num_pontos-1 de acordo com x
-	thrust::sort_by_key(dX.begin(), dX.end(), indices_x.begin());
+	thrust::stable_sort_by_key(dX.begin(), dX.end(), indices_x.begin());
 
 	// A partir dos indices reordenados nós reordenamos y e z
 	thrust::gather(indices_x.begin(), indices_x.end(), dY_aux.begin(), dY.begin());
