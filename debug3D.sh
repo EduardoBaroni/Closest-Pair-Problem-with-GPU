@@ -34,7 +34,7 @@ read maxZ
 echo "Informe o número de pontos"
 read num_pontos
 
-for ((i = 0; 5 > i; i++)); do
+for ((i = 0; 10 > i; i++)); do
 	echo "Executando gerador"
 	./gerador $num_pontos $minX $maxX $minY $maxY $minZ $maxZ
 

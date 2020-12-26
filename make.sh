@@ -1,64 +1,59 @@
 #!/bin/bash
 
-echo "Compilando..."
-gcc gerador_bin_v5.c -pedantic -std=c11 -o gerador
-gcc cpp_seq_v7.c -pedantic -std=c11 -O3 -o seq_7 -lm
-gcc cpp_seq_v8.c -pedantic -std=c11 -O3 -o seq_8 -lm
-gcc cpp_seq_v9.c -pedantic -std=c11 -O3 -o seq_9 -lm
-gcc sed6_quick.c -pedantic -std=c11 -O3 -o sed6 -lm
-nvcc cpp_cuda_v28.cu -O3 -o paralelo28
-nvcc cpp_cuda_v29.cu -O3 -o paralelo29
-nvcc cpp_cuda_v30.cu -O3 -o paralelo30
-nvcc cpp_cuda_v31.cu -O3 -o paralelo31
-nvcc cpp_cuda_v32.cu -O3 -o paralelo32
-echo "Compilação finalizada"
+if [[ ! -f "$gerador" || "$seq0" || "$seq1" || "$seq2" || "$paralelo0" || "$paralelo1" || "$paralelo2" || "$paralelo3" ]]; then
+	echo "Compilando..."
+	gcc gerador.c -pedantic -std=c11 -o gerador -DSCRIPT_MODE
+	gcc cpp_seq_v7.c -pedantic -std=c11 -O3 -o seq0 -lm
+	gcc cpp_seq_v8.c -pedantic -std=c11 -O3 -o seq1 -lm
+	gcc cpp_seq_v9.c -pedantic -std=c11 -O3 -o seq2 -lm
+	gcc sed6_quick.c -pedantic -std=c11 -O3 -o sed6 -lm
+	nvcc cpp_cuda_v0.cu -O3 -o paralelo0
+	nvcc cpp_cuda_v1.cu -O3 -o paralelo1
+	nvcc cpp_cuda_v2.cu -O3 -o paralelo2
+	nvcc cpp_cuda_v3.cu -O3 -o paralelo3
+	echo "Compilação finalizada"
+fi
 
-echo "!   TOTAL   !" > seq7.txt
-echo "!   TOTAL   !" > seq8.txt
-echo "!   TOTAL   !" > seq9.txt
+echo "!   TOTAL   !" > seq0.txt
+echo "!   TOTAL   !" > seq1.txt
+echo "!   TOTAL   !" > seq2.txt
 echo "|   TOTAL   |" > sed6.txt
 
-echo "!   TOTAL   !" > paralelo28.txt
-echo "!   TOTAL   !" > paralelo29.txt
-echo "!   TOTAL   !" > paralelo30.txt
-echo "!   TOTAL   !" > paralelo31.txt
-echo "!   TOTAL   !" > paralelo32.txt
+echo "!   TOTAL   !" > paralelo0.txt
+echo "!   TOTAL   !" > paralelo1.txt
+echo "!   TOTAL   !" > paralelo2.txt
+echo "!   TOTAL   !" > paralelo3.txt
 
 echo "Executando..."
-echo "Executando seq7"
-for (( i = 0; 6 > i; i++)); do
-	./seq_7 nPontos.bin coordenadas.bin >> seq7.txt			
-done
-echo "Executando seq8"
-for (( i = 0; 6 > i; i++)); do
-	./seq_8 nPontos.bin coordenadas.bin >> seq8.txt			
-done
-echo "Executando seq9"
-for (( i = 0; 6 > i; i++)); do
-	./seq_9 nPontos.bin coordenadas.bin >> seq9.txt			
-done
-echo "Executando sed6"
-for (( i = 0; 6 > i; i++)); do
+
+for (( i = 0; 10 > i; i++)); do
+	echo "Executando seq0"
+	./seq0 nPontos.bin coordenadas.bin >> seq0.txt			
+
+	echo "Executando seq1"
+	./seq1 nPontos.bin coordenadas.bin >> seq1.txt			
+
+	echo "Executando seq2"
+	./seq2 nPontos.bin coordenadas.bin >> seq2.txt			
+
+	echo "Executando sed6"
 	./sed6 nPontos.bin coordenadas.bin >> sed6.txt			
+
+	echo "Executando paralelo0"
+	./paralelo0 nPontos.bin coordenadas.bin
+	./paralelo0 nPontos.bin coordenadas.bin >> paralelo0.txt
+
+	echo "Executando paralelo1"
+	./paralelo1 nPontos.bin coordenadas.bin
+	./paralelo1 nPontos.bin coordenadas.bin >> paralelo1.txt
+
+	echo "Executando paralelo2"
+	./paralelo2 nPontos.bin coordenadas.bin
+	./paralelo2 nPontos.bin coordenadas.bin >> paralelo2.txt
+
+	echo "Executando paralelo3"
+	./paralelo3 nPontos.bin coordenadas.bin
+	./paralelo3 nPontos.bin coordenadas.bin >> paralelo3.txt
 done
-echo "Executando paralelo28"
-for (( i = 0; 6 > i; i++)); do
-	./paralelo28 nPontos.bin coordenadas.bin >> paralelo28.txt
-done
-echo "Executando paralelo29"
-for (( i = 0; 6 > i; i++)); do
-	./paralelo29 nPontos.bin coordenadas.bin >> paralelo29.txt
-done
-echo "Executando paralelo30"
-for (( i = 0; 6 > i; i++)); do
-	./paralelo30 nPontos.bin coordenadas.bin >> paralelo30.txt
-done
-echo "Executando paralelo31"
-for (( i = 0; 6 > i; i++)); do
-	./paralelo31 nPontos.bin coordenadas.bin >> paralelo31.txt
-done
-echo "Executando paralelo32"
-for (( i = 0; 6 > i; i++)); do
-	./paralelo32 nPontos.bin coordenadas.bin >> paralelo32.txt
-done
+
 echo "Execução finalizada"
