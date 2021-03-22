@@ -3,7 +3,7 @@
 	Aqui se utiliza a plataforma CUDA a fim de verificar possíveis soluções eficientes.
 */
 
-// Bibliotecas C
+// Bibliotecas C   
 #include <stdio.h>
 #include <stdlib.h> 
 #include <math.h>
